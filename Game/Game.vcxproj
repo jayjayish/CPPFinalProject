@@ -124,7 +124,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
       <AdditionalLibraryDirectories>$(SolutionDir)Externals\SFML\$(PlatformShortName)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\_Build\$(PlatformShortName)\$(Configuration)\$(ProjectName)$(TargetExt)</OutputFile>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
@@ -194,16 +194,32 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NoteObject.cpp" />
+    <ClCompile Include="NoteScroller.cpp" />
+    <ClCompile Include="NoteTrackEnum.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RythmnMap.cpp" />
+    <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="NoteObject.h" />
+    <ClInclude Include="NoteScroller.h" />
+    <ClInclude Include="NoteTrackEnum.h" />
     <ClInclude Include="Precompiled.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="RythmnMap.h" />
+    <ClInclude Include="Time.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

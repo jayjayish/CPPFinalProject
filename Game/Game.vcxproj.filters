@@ -3,17 +3,66 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Precompiled.cpp">
-      <Filter>Precompiled</Filter>
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="NoteScroller.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="NoteObject.cpp">
+      <Filter>Gameplay\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="NoteTrackEnum.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="RythmnMap.cpp">
+      <Filter>Gameplay\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Precompiled">
+    <Filter Include="Gameplay">
+      <UniqueIdentifier>{6f4a51d4-b6ef-4901-89c0-572730d54a30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Structs">
+      <UniqueIdentifier>{0a696109-6671-4988-8e5c-71291d78c0a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{ce8a2c72-5c7f-464d-88ad-f77ce70d64d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
       <UniqueIdentifier>{92f1c73a-c2ea-4322-afec-74c388668350}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
-      <Filter>Precompiled</Filter>
+      <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteScroller.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="NoteObject.h">
+      <Filter>Gameplay\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteTrackEnum.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="RythmnMap.h">
+      <Filter>Gameplay\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
   </ItemGroup>
 </Project>

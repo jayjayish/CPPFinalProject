@@ -1,11 +1,26 @@
 #include "Precompiled.h"
-#include "SFML/Graphics.hpp"
+#include "Time.h"
+#include "AudioManager.h"
+
+constexpr const int k_WindowWidth = 1920;
+constexpr const int k_WindowHeight = 1080;
+
+sf::Clock Clock;
 
 void RenderSquare(sf::RenderWindow& window);
+void Update(sf::RenderWindow& window);
+void BPMTemp();
+int lastBPM = 0;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1024, 768), "IT IS ALIVE!", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "IT IS ALIVE!", sf::Style::Default);
+
+	Time timeClass;
+
+	AudioManager audioManager;
+	audioManager.Instance().Initialize();
+	Clock.restart();
 
 	while (window.isOpen())
 	{
@@ -17,21 +32,43 @@ int main()
 		}
 
 		window.clear();
-
-		RenderSquare(window);
+		Update(window);
 		window.display();
 	}
 
 	return 0;
 }
 
+void Update(sf::RenderWindow& window)
+{
+	RenderSquare(window);
+	BPMTemp();
+}
+
+
 void RenderSquare(sf::RenderWindow& window)
 {
+	Time timeClass;
+	double timeDiff = Clock.getElapsedTime().asSeconds();
+	double sinVal = sin(timeDiff * 2 * 3.1415);
 	sf::RectangleShape shape(sf::Vector2f(100.0f, 100.0f));
 	shape.setOutlineColor(sf::Color::Green);
 	shape.setOutlineThickness(1.0f);
-	shape.setPosition(sf::Vector2f(10.0f, 10.0f));
+	shape.setPosition(sf::Vector2f(sinVal * k_WindowWidth / 2.0 + k_WindowWidth / 2.0, k_WindowHeight / 2.0));
 	shape.setFillColor(sf::Color::Black);
 
 	window.draw(shape);
 }
+
+void BPMTemp()
+{
+	Time timeClass;
+	if (timeClass.CalculateTimeDifference() > lastBPM)
+	{
+		AudioManager audioManager;
+		audioManager.Instance().PlayHitSound();
+		std::cout << "Hitsound\n";
+		lastBPM += 1;
+	}
+}
+
