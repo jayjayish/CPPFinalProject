@@ -8,6 +8,9 @@ private:
 	double m_Duration;
 public:
 	NoteObject(NoteTrack, double);
+	NoteTrack GetTrack();
+	double GetDuration();
+	NoteObject();
 	~NoteObject() = default;
 };
 

@@ -17,11 +17,11 @@
     <ClCompile Include="NoteTrackEnum.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="RythmnMap.cpp">
-      <Filter>Gameplay\Structs</Filter>
-    </ClCompile>
     <ClCompile Include="AudioManager.cpp">
       <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="RythmnMapManager.cpp">
+      <Filter>Gameplay\Maps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +37,9 @@
     <Filter Include="Global">
       <UniqueIdentifier>{92f1c73a-c2ea-4322-afec-74c388668350}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Gameplay\Maps">
+      <UniqueIdentifier>{227471a7-cb06-4cf9-8b84-4a723af5aa53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
@@ -49,17 +52,17 @@
       <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="NoteObject.h">
-      <Filter>Gameplay\Structs</Filter>
-    </ClInclude>
     <ClInclude Include="NoteTrackEnum.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="RythmnMap.h">
-      <Filter>Gameplay\Structs</Filter>
-    </ClInclude>
     <ClInclude Include="AudioManager.h">
       <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RythmnMapManager.h">
+      <Filter>Gameplay\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteObject.h">
+      <Filter>Gameplay\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

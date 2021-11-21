@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "Time.h"
 #include "AudioManager.h"
+#include "RythmnMapManager.h"
 
 constexpr const int k_WindowWidth = 1920;
 constexpr const int k_WindowHeight = 1080;
@@ -17,6 +18,9 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "IT IS ALIVE!", sf::Style::Default);
 
 	Time timeClass;
+	RythmnMapManager manager;
+	manager.LoadMap("Resources/NeeNeeNee.txt");
+	std::cout << manager.GetNote(0).GetDuration() << "\n";
 
 	AudioManager audioManager;
 	audioManager.Instance().Initialize();
