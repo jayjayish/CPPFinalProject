@@ -19,8 +19,8 @@ int main()
 
 	Time timeClass;
 	RythmnMapManager manager;
-	manager.LoadMap("Resources/NeeNeeNee.txt");
-	std::cout << manager.GetNote(0).GetDuration() << "\n";
+	manager.Instance().LoadMap("Resources/NeeNeeNee.txt");
+	std::cout << manager.Instance().GetNote(0).GetDuration() << "\n";
 
 	AudioManager audioManager;
 	audioManager.Instance().Initialize();
@@ -67,6 +67,8 @@ void RenderSquare(sf::RenderWindow& window)
 void BPMTemp()
 {
 	Time timeClass;
+	RythmnMapManager manager;
+	std::cout << manager.Instance().GetBPM();
 	if (timeClass.CalculateTimeDifference() > lastBPM)
 	{
 		AudioManager audioManager;
