@@ -15,6 +15,7 @@ void AudioManager::Initialize()
 
 	m_HitSound.setBuffer(m_SoundBuffer);
 	m_HitSound.setVolume(30.f);
+	m_Music.setVolume(30.0f);
 }
 
 void AudioManager::PlayMusic()

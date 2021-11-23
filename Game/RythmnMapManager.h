@@ -15,5 +15,6 @@ public:
 	double GetBPM();
 	double GetStartOffset();
 	void LoadMap(std::string);
+	~RythmnMapManager();
 };
 

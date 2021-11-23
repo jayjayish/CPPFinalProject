@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "RythmnMapManager.h"
+#include "Time.h"
 
 
 NoteObject RythmnMapManager::GetNote(int i)
@@ -64,7 +65,16 @@ void RythmnMapManager::LoadMap(std::string fileName)
 		}
 	}
 	file.close();
+
+	Time timeClass;
+	timeClass.Instance().SetBPM(m_BPM);
 }
+
+RythmnMapManager::~RythmnMapManager()
+{
+	delete m_Notes;
+}
+
 
 
 

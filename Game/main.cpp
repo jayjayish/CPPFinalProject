@@ -2,29 +2,33 @@
 #include "Time.h"
 #include "AudioManager.h"
 #include "RythmnMapManager.h"
+#include "FontManager.h"
 
 constexpr const int k_WindowWidth = 1920;
-constexpr const int k_WindowHeight = 1080;
+constexpr const int k_WindowHeight = 1014;
 
-sf::Clock Clock;
-
-void RenderSquare(sf::RenderWindow& window);
-void Update(sf::RenderWindow& window);
-void BPMTemp();
-int lastBPM = 0;
+void RenderKeys(sf::RenderWindow& window);
+void RenderButton(sf::RenderWindow& window);
+void UpdateWindow(sf::RenderWindow& window);
+void OnStartGame();
+bool InMenu = true;
+int lastBPM = 4;
+sf::Font m_Font;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "IT IS ALIVE!", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "IT IS ALIVE!", sf::Style::Titlebar | sf::Style::Close);
 
-	Time timeClass;
 	RythmnMapManager manager;
 	manager.Instance().LoadMap("Resources/NeeNeeNee.txt");
-	std::cout << manager.Instance().GetNote(0).GetDuration() << "\n";
 
 	AudioManager audioManager;
 	audioManager.Instance().Initialize();
-	Clock.restart();
+
+	if (!m_Font.loadFromFile("Resources/arial.ttf"))
+	{
+		throw "Font file not found";
+	}
 
 	while (window.isOpen())
 	{
@@ -36,45 +40,112 @@ int main()
 		}
 
 		window.clear();
-		Update(window);
+		UpdateWindow(window);
 		window.display();
 	}
 
 	return 0;
 }
 
-void Update(sf::RenderWindow& window)
+void UpdateWindow(sf::RenderWindow& window)
 {
-	RenderSquare(window);
-	BPMTemp();
-}
-
-
-void RenderSquare(sf::RenderWindow& window)
-{
-	Time timeClass;
-	double timeDiff = Clock.getElapsedTime().asSeconds();
-	double sinVal = sin(timeDiff * 2 * 3.1415);
-	sf::RectangleShape shape(sf::Vector2f(100.0f, 100.0f));
-	shape.setOutlineColor(sf::Color::Green);
-	shape.setOutlineThickness(1.0f);
-	shape.setPosition(sf::Vector2f(sinVal * k_WindowWidth / 2.0 + k_WindowWidth / 2.0, k_WindowHeight / 2.0));
-	shape.setFillColor(sf::Color::Black);
-
-	window.draw(shape);
-}
-
-void BPMTemp()
-{
-	Time timeClass;
-	RythmnMapManager manager;
-	std::cout << manager.Instance().GetBPM();
-	if (timeClass.CalculateTimeDifference() > lastBPM)
+	if (InMenu)
 	{
-		AudioManager audioManager;
-		audioManager.Instance().PlayHitSound();
-		std::cout << "Hitsound\n";
-		lastBPM += 1;
+		RenderButton(window);
+	}
+	else
+	{
+		RenderKeys(window);
 	}
 }
 
+void RenderButton(sf::RenderWindow& window)
+{
+	float buttonWidth = 360.0f;
+	float buttonHeight = 100.0f;
+
+	sf::RectangleShape shape(sf::Vector2f(buttonWidth, buttonHeight));
+	shape.setOutlineColor(sf::Color::White);
+	shape.setOutlineThickness(1.0f);
+	shape.setPosition(sf::Vector2f(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0));
+	shape.setFillColor(sf::Color::White);
+	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+	sf::Text text("Start Game", m_Font, 50);
+	text.setFillColor(sf::Color::Black);
+	text.setPosition(sf::Vector2f(k_WindowWidth / 2.0 - buttonWidth / 2.0 + 50.0, k_WindowHeight / 2.0 - buttonHeight / 2.0  + 15.0));
+
+
+	window.draw(shape);
+
+	window.draw(text);
+
+	if (mousePos.x > k_WindowWidth / 2.0 && mousePos.x < (k_WindowWidth / 2.0 + buttonWidth) && 
+		mousePos.y > k_WindowHeight / 2.0 && mousePos.y < (k_WindowHeight / 2.0 + buttonHeight) &&
+		sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		OnStartGame();
+	}
+}
+
+void RenderKeys(sf::RenderWindow& window)
+{
+	Time timeClass;
+	if (timeClass.CalculateCurrentBeat() > lastBPM)
+	{
+		AudioManager audioManager;
+		audioManager.Instance().PlayHitSound();
+		lastBPM += 1;
+	}
+
+	float buttonWidth = 100.0f;
+	float buttonHeight = 100.0f;
+	float buttonHorizontalPosition = 200.0f;
+	float buttonVerticalOffset = 200.f;
+	sf::Color upperKeyColor = sf::Color::Cyan;
+	sf::Color lowerKeyColor = sf::Color::Yellow;
+
+	sf::RectangleShape upperKey(sf::Vector2f(buttonWidth, buttonHeight));
+	upperKey.setOutlineColor(upperKeyColor);
+	upperKey.setOutlineThickness(1.0f);
+	upperKey.setPosition(sf::Vector2f(buttonHorizontalPosition, k_WindowHeight / 2.0 - buttonHeight / 2.0 + buttonVerticalOffset));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+	{
+		upperKey.setFillColor(upperKeyColor);
+	}
+	else
+	{
+		upperKey.setFillColor(sf::Color::Black);
+	}
+
+	sf::RectangleShape lowerKey(sf::Vector2f(buttonWidth, buttonHeight));
+	lowerKey.setOutlineColor(lowerKeyColor);
+	lowerKey.setOutlineThickness(1.0f);
+	lowerKey.setPosition(sf::Vector2f(buttonHorizontalPosition, k_WindowHeight / 2.0 - buttonHeight / 2.0 - buttonVerticalOffset));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
+	{
+		lowerKey.setFillColor(lowerKeyColor);
+	}
+	else
+	{
+		lowerKey.setFillColor(sf::Color::Black);
+	}
+
+	window.draw(upperKey);
+	window.draw(lowerKey);
+
+
+	std::cout << timeClass.CalculateCurrentBeat() << "\n";
+}
+
+
+void OnStartGame()
+{
+	AudioManager audio;
+	audio.Instance().PlayMusic();
+	Time time;
+	time.SetTimeStart();
+
+	std::cout << "Game Started \n";
+	InMenu = false;
+}

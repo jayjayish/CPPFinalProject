@@ -23,6 +23,7 @@
     <ClCompile Include="RythmnMapManager.cpp">
       <Filter>Gameplay\Maps</Filter>
     </ClCompile>
+    <ClCompile Include="FontManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Gameplay">
@@ -64,6 +65,7 @@
     <ClInclude Include="NoteObject.h">
       <Filter>Gameplay\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="FontManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

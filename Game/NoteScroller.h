@@ -2,7 +2,6 @@
 class NoteScroller
 {
 private:
-	double BPM = 145;
-	const std::chrono::milliseconds startDelay = std::chrono::milliseconds(1500);
+	const double k_ScrollTime = 2;
 };
 

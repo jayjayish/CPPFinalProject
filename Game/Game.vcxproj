@@ -195,6 +195,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NoteObject.cpp" />
     <ClCompile Include="NoteScroller.cpp" />
@@ -210,6 +211,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="FontManager.h" />
     <ClInclude Include="NoteObject.h" />
     <ClInclude Include="NoteScroller.h" />
     <ClInclude Include="NoteTrackEnum.h" />
