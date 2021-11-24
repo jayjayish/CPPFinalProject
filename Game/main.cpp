@@ -7,13 +7,17 @@ constexpr const int k_WindowWidth = 1920;
 constexpr const int k_WindowHeight = 1014;
 
 void RenderKeys(sf::RenderWindow& window);
-void RenderButton(sf::RenderWindow& window);
+void RenderMainMenu(sf::RenderWindow& window);
 void UpdateWindow(sf::RenderWindow& window);
 void OnStartGame();
-void ModifyOffset();
+void StartGameDelay();
 void UpdateGameLogic();
 bool InMenu = true;
 bool OffsetCreated = false;
+bool GameStarted = false;
+bool MusicStarted = false;
+bool LastUpdateUpperKeyPressed = false;
+bool LastUpdateLowerKeyPressed = false;
 int lastBPM = 4;
 sf::Font m_Font;
 
@@ -32,6 +36,7 @@ int main()
 		throw "Font file not found";
 	}
 
+	std::cout << "Resources Loaded\n";
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -54,7 +59,7 @@ void UpdateWindow(sf::RenderWindow& window)
 {
 	if (InMenu)
 	{
-		RenderButton(window);
+		RenderMainMenu(window);
 	}
 	else
 	{
@@ -62,7 +67,20 @@ void UpdateWindow(sf::RenderWindow& window)
 	}
 }
 
-void RenderButton(sf::RenderWindow& window)
+void UpdateGameLogic()
+{
+	if (InMenu)
+	{
+
+	}
+	else if (!MusicStarted && GameStarted)
+	{
+		StartGameDelay();
+	}
+}
+
+
+void RenderMainMenu(sf::RenderWindow& window)
 {
 	float buttonWidth = 360.0f;
 	float buttonHeight = 100.0f;
@@ -78,13 +96,11 @@ void RenderButton(sf::RenderWindow& window)
 	text.setFillColor(sf::Color::Black);
 	text.setPosition(sf::Vector2f(k_WindowWidth / 2.0 - buttonWidth / 2.0 + 50.0, k_WindowHeight / 2.0 - buttonHeight / 2.0  + 15.0));
 
-
 	window.draw(shape);
-
 	window.draw(text);
 
-	if (mousePos.x > k_WindowWidth / 2.0 && mousePos.x < (k_WindowWidth / 2.0 + buttonWidth) && 
-		mousePos.y > k_WindowHeight / 2.0 && mousePos.y < (k_WindowHeight / 2.0 + buttonHeight) &&
+	if (mousePos.x > k_WindowWidth / 2.0 - buttonWidth / 2.0 && mousePos.x < (k_WindowWidth / 2.0 + buttonWidth / 2.0) &&
+		mousePos.y > k_WindowHeight / 2.0 - buttonHeight / 2.0 && mousePos.y < (k_WindowHeight / 2.0 + buttonHeight / 2.0) &&
 		sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		OnStartGame();
@@ -93,14 +109,6 @@ void RenderButton(sf::RenderWindow& window)
 
 void RenderKeys(sf::RenderWindow& window)
 {
-	Time timeClass;
-	//if (timeClass.CalculateCurrentBeat() > lastBPM)
-	//{
-	//	AudioManager audioManager;
-	//	audioManager.Instance().PlayHitSound();
-	//	lastBPM += 1;
-	//}
-
 	float buttonWidth = 100.0f;
 	float buttonHeight = 100.0f;
 	float buttonHorizontalPosition = 200.0f;
@@ -114,7 +122,7 @@ void RenderKeys(sf::RenderWindow& window)
 	upperKey.setPosition(sf::Vector2f(buttonHorizontalPosition, k_WindowHeight / 2.0 - buttonHeight / 2.0 - buttonVerticalOffset));
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 	{
-		std::cout << timeClass.CalculateCurrentBeat() << "\n";
+		upperKey.setFillColor(upperKeyColor);
 	}
 	else
 	{
@@ -137,41 +145,30 @@ void RenderKeys(sf::RenderWindow& window)
 	window.draw(upperKey);
 	window.draw(lowerKey);
 
-
-	
 }
 
 
 void OnStartGame()
 {
-	AudioManager audio;
-	audio.Instance().PlayMusic();
 	Time time;
 	time.SetTimeStart();
 
 	std::cout << "Game Started \n";
 	InMenu = false;
+	GameStarted = true;
 }
 
-void UpdateGameLogic()
-{
-	if (InMenu)
-	{
-
-	}
-	else
-	{
-		ModifyOffset();
-	}
-}
-
-void ModifyOffset()
+void StartGameDelay()
 {
 	Time time;
-	RythmnMapManager mapManager;
-	if (!OffsetCreated && time.CalculateCurrentBeat() > mapManager.Instance().GetStartOffset())
+	if (time.CalculateCurrentBeat() > 4)
 	{
 		time.SetTimeStart();
-		OffsetCreated = true;
+		MusicStarted = true;
+
+		AudioManager audio;
+		audio.Instance().PlayMusic();
 	}
 }
+
+

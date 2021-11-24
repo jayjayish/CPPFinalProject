@@ -67,7 +67,7 @@ void RythmnMapManager::LoadMap(std::string fileName)
 	file.close();
 
 	Time timeClass;
-	timeClass.Instance().SetBPM(m_BPM);
+	timeClass.Instance().SetMapData(m_BPM, m_Offset);
 }
 
 RythmnMapManager::~RythmnMapManager()

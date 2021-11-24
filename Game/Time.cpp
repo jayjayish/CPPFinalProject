@@ -2,7 +2,8 @@
 #include "Time.h"
 
 std::chrono::time_point<std::chrono::steady_clock> Time::m_GlobalStartTime = std::chrono::time_point<std::chrono::steady_clock>::max();
-double Time::m_BPM = 1.0;
+double Time::m_BPM = 60.0;
+double Time::m_Offset = 0.0;
 
 double Time::CalculateTimeDifference()
 {
@@ -12,7 +13,7 @@ double Time::CalculateTimeDifference()
 
 double Time::CalculateCurrentBeat()
 {
-	return CalculateTimeDifference() * m_BPM;
+	return CalculateTimeDifference() * m_BPM - m_Offset;
 }
 
 void Time::SetTimeStart()
@@ -20,9 +21,10 @@ void Time::SetTimeStart()
 	m_GlobalStartTime = std::chrono::steady_clock::now();
 }
 
-void Time::SetBPM(double bpm)
+void Time::SetMapData(double bpm, double offset)
 {
 	m_BPM = bpm / 60.0;
+	m_Offset = offset;
 }
 
 Time::Time()
