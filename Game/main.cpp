@@ -2,9 +2,9 @@
 #include "Time.h"
 #include "AudioManager.h"
 #include "RythmnMapManager.h"
+#include "NoteManager.h"
+#include "GlobalConstants.h"
 
-constexpr const int k_WindowWidth = 1920;
-constexpr const int k_WindowHeight = 1014;
 
 void RenderKeys(sf::RenderWindow& window);
 void RenderMainMenu(sf::RenderWindow& window);
@@ -26,7 +26,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "IT IS ALIVE!", sf::Style::Titlebar | sf::Style::Close);
 
 	RythmnMapManager manager;
-	manager.Instance().LoadMap("Resources/NeeNeeNee.txt");
+	manager.LoadMap("Resources/NeeNeeNee.txt");
 
 	AudioManager audioManager;
 	audioManager.Instance().Initialize();
@@ -49,6 +49,7 @@ int main()
 		window.clear();
 		UpdateGameLogic();
 		UpdateWindow(window);
+
 		window.display();
 	}
 
@@ -64,6 +65,8 @@ void UpdateWindow(sf::RenderWindow& window)
 	else
 	{
 		RenderKeys(window);
+		NoteManager noteManager;
+		noteManager.DrawNotes(window);
 	}
 }
 
@@ -76,6 +79,12 @@ void UpdateGameLogic()
 	else if (!MusicStarted && GameStarted)
 	{
 		StartGameDelay();
+	}
+
+	if (GameStarted)
+	{
+		NoteManager noteManager;
+		noteManager.UpdateNoteTracks();
 	}
 }
 
@@ -109,33 +118,26 @@ void RenderMainMenu(sf::RenderWindow& window)
 
 void RenderKeys(sf::RenderWindow& window)
 {
-	float buttonWidth = 100.0f;
-	float buttonHeight = 100.0f;
-	float buttonHorizontalPosition = 200.0f;
-	float buttonVerticalOffset = 200.f;
-	sf::Color upperKeyColor = sf::Color::Cyan;
-	sf::Color lowerKeyColor = sf::Color::Yellow;
-
-	sf::RectangleShape upperKey(sf::Vector2f(buttonWidth, buttonHeight));
-	upperKey.setOutlineColor(upperKeyColor);
+	sf::RectangleShape upperKey(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
+	upperKey.setOutlineColor(sf::Color::Cyan);
 	upperKey.setOutlineThickness(1.0f);
-	upperKey.setPosition(sf::Vector2f(buttonHorizontalPosition, k_WindowHeight / 2.0 - buttonHeight / 2.0 - buttonVerticalOffset));
+	upperKey.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 - k_KeyVerticalOffset));
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 	{
-		upperKey.setFillColor(upperKeyColor);
+		upperKey.setFillColor(sf::Color::Cyan);
 	}
 	else
 	{
 		upperKey.setFillColor(sf::Color::Black);
 	}
 
-	sf::RectangleShape lowerKey(sf::Vector2f(buttonWidth, buttonHeight));
-	lowerKey.setOutlineColor(lowerKeyColor);
+	sf::RectangleShape lowerKey(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
+	lowerKey.setOutlineColor(sf::Color::Yellow);
 	lowerKey.setOutlineThickness(1.0f);
-	lowerKey.setPosition(sf::Vector2f(buttonHorizontalPosition, k_WindowHeight / 2.0 - buttonHeight / 2.0 + buttonVerticalOffset));
+	lowerKey.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + k_KeyVerticalOffset));
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
 	{
-		lowerKey.setFillColor(lowerKeyColor);
+		lowerKey.setFillColor(sf::Color::Yellow);
 	}
 	else
 	{
@@ -161,9 +163,9 @@ void OnStartGame()
 void StartGameDelay()
 {
 	Time time;
-	if (time.CalculateCurrentBeat() > 4)
+	RythmnMapManager manager;
+	if (time.CalculateCurrentBeat() > 4 - manager.GetStartOffset())
 	{
-		time.SetTimeStart();
 		MusicStarted = true;
 
 		AudioManager audio;

@@ -195,9 +195,11 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="KeyPressOnFrame.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NoteManager.cpp" />
     <ClCompile Include="NoteObject.cpp" />
-    <ClCompile Include="NoteScroller.cpp" />
+    <ClCompile Include="NoteHolder.cpp" />
     <ClCompile Include="NoteTrackEnum.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -210,8 +212,11 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="GlobalConstants.h" />
+    <ClInclude Include="KeyPressOnFrame.h" />
+    <ClInclude Include="NoteManager.h" />
     <ClInclude Include="NoteObject.h" />
-    <ClInclude Include="NoteScroller.h" />
+    <ClInclude Include="NoteHolder.h" />
     <ClInclude Include="NoteTrackEnum.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="resource.h" />

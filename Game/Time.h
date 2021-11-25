@@ -12,7 +12,5 @@ public:
 	void SetTimeStart();
 	void SetMapData(double bpm, double offset);
 	Time();
-	static Time& Instance() { static Time time; return time; }
-
 };
 

@@ -1,9 +1,12 @@
 #include "Precompiled.h"
-
 #include <fstream>
 #include "RythmnMapManager.h"
 #include "Time.h"
 
+int RythmnMapManager::m_Size = 0;
+double RythmnMapManager::m_Offset = 0.0;
+double RythmnMapManager::m_BPM = 0.0;
+NoteObject* RythmnMapManager::m_Notes = nullptr;
 
 NoteObject RythmnMapManager::GetNote(int i)
 {
@@ -18,6 +21,11 @@ double RythmnMapManager::GetBPM()
 double RythmnMapManager::GetStartOffset()
 {
 	return m_Offset;
+}
+
+int RythmnMapManager::GetSize()
+{
+	return m_Size;
 }
 
 void RythmnMapManager::LoadMap(std::string fileName)
@@ -58,7 +66,6 @@ void RythmnMapManager::LoadMap(std::string fileName)
 				start = end + 1;
 				double duration = std::stod(line.substr(start, end - start));
 
-				std::cout << "Track: " << track << "\nDuration: " << duration << "\n";
 				m_Notes[lineNumber - 3] = NoteObject((NoteTrack) track, duration);
 			}
 			lineNumber += 1;
@@ -67,14 +74,8 @@ void RythmnMapManager::LoadMap(std::string fileName)
 	file.close();
 
 	Time timeClass;
-	timeClass.Instance().SetMapData(m_BPM, m_Offset);
+	timeClass.SetMapData(m_BPM, m_Offset);
 }
-
-RythmnMapManager::~RythmnMapManager()
-{
-	delete m_Notes;
-}
-
 
 
 

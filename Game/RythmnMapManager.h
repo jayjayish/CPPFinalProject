@@ -5,16 +5,15 @@
 class RythmnMapManager
 {
 private:
-	int m_Size;
-	double m_Offset;
-	double m_BPM;
-	NoteObject* m_Notes;
+	static int m_Size;
+	static double m_Offset;
+	static double m_BPM;
+	static NoteObject* m_Notes;
 public:
-	static RythmnMapManager& Instance() { static RythmnMapManager manager; return manager; }
 	NoteObject GetNote(int);
 	double GetBPM();
 	double GetStartOffset();
+	int GetSize();
 	void LoadMap(std::string);
-	~RythmnMapManager();
 };
 
