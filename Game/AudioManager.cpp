@@ -23,6 +23,11 @@ void AudioManager::PlayMusic()
 	m_Music.play();
 }
 
+void AudioManager::StopMusic()
+{
+	m_Music.stop();
+}
+
 void AudioManager::PlayHitSound()
 {
 	m_HitSound.play();

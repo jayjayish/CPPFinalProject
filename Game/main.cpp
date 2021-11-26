@@ -100,6 +100,8 @@ void UpdateGameLogic()
 		MapOver = noteManager.UpdateNoteTracks();
 		if (MapOver)
 		{
+			AudioManager audio; 
+			audio.Instance().StopMusic();
 			OffsetCreated = false;
 			GameStarted = false;
 			MusicStarted = false;
@@ -170,7 +172,7 @@ void OnStartGame()
 	Time time;
 	time.SetTimeStart();
 
-	std::cout << "Game Started \n";
+	//std::cout << "Game Started \n";
 	InMenu = false;
 	GameStarted = true;
 }

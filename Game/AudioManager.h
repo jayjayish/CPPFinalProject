@@ -9,6 +9,7 @@ public:
 	void Initialize();
 	static AudioManager& Instance() { static AudioManager audioManager; return audioManager; }
 	void PlayMusic();
+	void StopMusic();
 	void PlayHitSound();
 };
 
