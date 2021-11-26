@@ -7,5 +7,6 @@ extern constexpr float k_KeyButtonHeight = 100.0f;
 extern constexpr float k_KeyButtonWidth = 100.0f;
 extern constexpr float k_KeyHorizontalPosition = 200.0f;
 extern constexpr float k_KeyVerticalOffset = 200.f;
+extern constexpr int k_BeatDelay = 4;
 
 #endif

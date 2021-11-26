@@ -1,13 +1,18 @@
 #pragma once
+#include "NoteTrackEnum.h"
+
 class KeyPressOnFrame
 {
 private:
-	bool D_KeyPressedPrev = false;
-	bool F_KeyPressedPrev = false;
-	bool J_KeyPressedPrev = false;
-	bool K_KeyPressedPrev = false;
+	static bool D_KeyPressedPrev;
+	static bool F_KeyPressedPrev;
+	static bool UpperPressed;
+
+	static bool J_KeyPressedPrev;
+	static bool K_KeyPressedPrev;
+	static bool LowerPressed;
 public:
-	bool UpperKeyPressed();
-	bool LowerKeyPressed();
+	bool KeyPressed(NoteTrack);
+	void Update();
 };
 

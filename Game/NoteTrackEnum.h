@@ -3,8 +3,8 @@
 
 enum class NoteTrack
 {
-    Left,
-    Right
+    Upper,
+    Lower
 };
 
 #endif NOTETRACK_H_

@@ -200,7 +200,6 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
     <ClCompile Include="NoteManager.cpp" />
     <ClCompile Include="NoteObject.cpp" />
     <ClCompile Include="NoteHolder.cpp" />
-    <ClCompile Include="NoteTrackEnum.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -208,6 +207,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RythmnMapManager.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +221,8 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RythmnMapManager.h" />
+    <ClInclude Include="ScoreEnum.h" />
+    <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>

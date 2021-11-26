@@ -8,11 +8,9 @@
 NoteHolder NoteManager::m_UpperTrack = NoteHolder();
 NoteHolder NoteManager::m_LowerTrack = NoteHolder();
 const double NoteManager::m_ScrollDelay = 2.0;
-double NoteManager::m_CurrentBPMCursor = 4 - m_ScrollDelay;
+double NoteManager::m_CurrentBPMCursor = k_BeatDelay - m_ScrollDelay;
 int NoteManager::m_NoteCursor = 0;
 const double NoteManager::m_LateThreshold = 0.2;
-KeyPressOnFrame NoteManager::m_KeyPressed = KeyPressOnFrame();
-
 
 void NoteManager::UpdateNoteTracks()
 {
@@ -20,6 +18,7 @@ void NoteManager::UpdateNoteTracks()
 	double currentBeat = timeManager.CalculateCurrentBeat();
 	RythmnMapManager rythmnMapManager;
 	int mapSize = rythmnMapManager.GetSize();
+
 	if (currentBeat >= m_CurrentBPMCursor + 3.0 && m_NoteCursor >= mapSize)
 	{
 		//std::cout << "Map over\n";
@@ -27,17 +26,7 @@ void NoteManager::UpdateNoteTracks()
 	else if (currentBeat >= m_CurrentBPMCursor && m_NoteCursor < mapSize)
 	{
 		NoteObject note = rythmnMapManager.GetNote(m_NoteCursor);
-
-		if (note.GetTrack() == NoteTrack::Left)
-		{
-			m_UpperTrack.AddNote(m_CurrentBPMCursor + m_ScrollDelay);
-			std::cout << "Note Added to upper\n";
-		}
-		else if (note.GetTrack() == NoteTrack::Right)
-		{
-			m_LowerTrack.AddNote(m_CurrentBPMCursor + m_ScrollDelay);
-			std::cout << "Note Added to lower\n";
-		}
+		GetTrack(note.GetTrack())->AddNote(m_CurrentBPMCursor + m_ScrollDelay);
 
 		m_CurrentBPMCursor += note.GetDuration();
 		m_NoteCursor += 1;
@@ -49,82 +38,81 @@ void NoteManager::UpdateNoteTracks()
 		}
 	}
 
-	if (m_KeyPressed.UpperKeyPressed())
+	KeyPressOnFrame keyInput;
+
+	for (int i = 0; i < 2; i++)
 	{
-		if (abs(m_UpperTrack.LookAtNextNote() - currentBeat) < m_LateThreshold)
+
+		if (keyInput.KeyPressed((NoteTrack) i))
 		{
-			m_UpperTrack.RemoveNextNote();
-			AudioManager audio;
-			audio.Instance().PlayHitSound();
+
+			NoteHolder* holder = GetTrack((NoteTrack)i);
+
+			std::cout << holder->LookAtNextNote() << "\n";
+
+			if (abs(holder->LookAtNextNote() - currentBeat) < m_LateThreshold)
+			{
+				holder->RemoveNextNote();
+				AudioManager audio;
+				audio.Instance().PlayHitSound();
+			}
 		}
 	}
 
-	if (m_KeyPressed.LowerKeyPressed())
+	for (int i = 0; i < 2; i++)
 	{
-		if (abs(m_LowerTrack.LookAtNextNote() - currentBeat) < m_LateThreshold)
+		NoteHolder* holder = GetTrack((NoteTrack)i);
+		if (holder->GetSize() != 0 &&
+			holder->LookAtNextNote() - currentBeat < -m_LateThreshold)
 		{
-			m_LowerTrack.RemoveNextNote();
-			AudioManager audio;
-			audio.Instance().PlayHitSound();
+			holder->RemoveNextNote();
 		}
-	}
-
-	if (m_UpperTrack.GetSize() != 0 &&
-		m_UpperTrack.LookAtNextNote() - currentBeat < -m_LateThreshold)
-	{
-		m_UpperTrack.RemoveNextNote();
-	}
-
-	if (m_LowerTrack.GetSize() != 0 &&
-		m_LowerTrack.LookAtNextNote() - currentBeat < -m_LateThreshold)
-	{
-		m_LowerTrack.RemoveNextNote();
 	}
 }
 
 void NoteManager::DrawNotes(sf::RenderWindow& window)
 {
-	sf::Vector2f upperKeyPos(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 - k_KeyVerticalOffset);
-	sf::Vector2f lowerKeyPos(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + k_KeyVerticalOffset);
-
 	Time timeManager;
 	double currentBeat = timeManager.CalculateCurrentBeat();
 
-	if (m_UpperTrack.GetSize() != 0)
+	for (int i = 0; i < 2; i++)
 	{
-		std::vector<double> upperTrackVector = m_UpperTrack.GetAllNotes();
-
-		for (auto pos = upperTrackVector.cbegin(); pos != upperTrackVector.cend(); ++pos)
+		NoteHolder* holder = GetTrack((NoteTrack) i);
+		if (holder->GetSize() != 0)
 		{
-			double timeUntilHit = *pos - currentBeat;
-			double horizontalPosition = Lerp(k_KeyHorizontalPosition, k_WindowWidth, timeUntilHit / m_ScrollDelay);
+			std::vector<double> trackVector = holder->GetAllNotes();
 
-			sf::RectangleShape rect(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
-			rect.setOutlineColor(sf::Color::Cyan);
-			rect.setOutlineThickness(1.0f);
-			rect.setPosition(sf::Vector2f(horizontalPosition, upperKeyPos.y));
+			for (auto pos = trackVector.cbegin(); pos != trackVector.cend(); ++pos)
+			{
+				double timeUntilHit = *pos - currentBeat;
+				double horizontalPosition = Lerp(k_KeyHorizontalPosition, k_WindowWidth, timeUntilHit / m_ScrollDelay);
 
-			window.draw(rect);
+				sf::RectangleShape rect(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
+				rect.setOutlineColor(sf::Color::Cyan);
+				rect.setOutlineThickness(1.0f);
+				rect.setPosition(sf::Vector2f(
+					horizontalPosition,
+					k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + (-k_KeyVerticalOffset + i * 2 * k_KeyVerticalOffset)
+				));
+
+				window.draw(rect);
+			}
 		}
 	}
+}
 
-	if (m_LowerTrack.GetSize() != 0)
+NoteHolder* NoteManager::GetTrack(NoteTrack track)
+{
+	if (track == NoteTrack::Upper)
 	{
-		std::vector<double> lowerTrackVector = m_LowerTrack.GetAllNotes();
-
-		for (auto pos = lowerTrackVector.cbegin(); pos != lowerTrackVector.cend(); ++pos)
-		{
-			double timeUntilHit = *pos - currentBeat;
-			double horizontalPosition = Lerp(k_KeyHorizontalPosition, k_WindowWidth, timeUntilHit / m_ScrollDelay);
-
-			sf::RectangleShape rect(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
-			rect.setOutlineColor(sf::Color::Yellow);
-			rect.setOutlineThickness(1.0f);
-			rect.setPosition(sf::Vector2f(horizontalPosition, lowerKeyPos.y));
-
-			window.draw(rect);
-		}
+		return &m_UpperTrack;
 	}
+	else if (track == NoteTrack::Lower)
+	{
+		return &m_LowerTrack;
+	}
+
+	throw "This shouldn't happen";
 }
 
 

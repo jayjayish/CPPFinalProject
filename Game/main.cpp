@@ -18,7 +18,6 @@ bool GameStarted = false;
 bool MusicStarted = false;
 bool LastUpdateUpperKeyPressed = false;
 bool LastUpdateLowerKeyPressed = false;
-int lastBPM = 4;
 sf::Font m_Font;
 
 int main()
@@ -83,6 +82,8 @@ void UpdateGameLogic()
 
 	if (GameStarted)
 	{
+		KeyPressOnFrame keyPress;
+		keyPress.Update();
 		NoteManager noteManager;
 		noteManager.UpdateNoteTracks();
 	}
@@ -164,7 +165,7 @@ void StartGameDelay()
 {
 	Time time;
 	RythmnMapManager manager;
-	if (time.CalculateCurrentBeat() > 4 - manager.GetStartOffset())
+	if (time.CalculateCurrentBeat() > k_BeatDelay - manager.GetStartOffset())
 	{
 		MusicStarted = true;
 

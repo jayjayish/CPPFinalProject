@@ -17,7 +17,7 @@ double NoteObject::GetDuration()
 }
 
 NoteObject::NoteObject()
-	:m_Track(NoteTrack::Left),
+	:m_Track(NoteTrack::Upper),
 	m_Duration(0)
 {}
 

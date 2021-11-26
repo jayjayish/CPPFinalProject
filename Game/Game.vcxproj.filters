@@ -14,17 +14,21 @@
     <ClCompile Include="NoteObject.cpp">
       <Filter>Gameplay\Structs</Filter>
     </ClCompile>
-    <ClCompile Include="NoteTrackEnum.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
     <ClCompile Include="AudioManager.cpp">
       <Filter>Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="RythmnMapManager.cpp">
       <Filter>Gameplay\Maps</Filter>
     </ClCompile>
-    <ClCompile Include="NoteManager.cpp" />
-    <ClCompile Include="KeyPressOnFrame.cpp" />
+    <ClCompile Include="ScoreManager.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="NoteManager.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyPressOnFrame.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Gameplay">
@@ -66,11 +70,21 @@
     <ClInclude Include="NoteObject.h">
       <Filter>Gameplay\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="NoteManager.h" />
     <ClInclude Include="GlobalConstants.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="KeyPressOnFrame.h" />
+    <ClInclude Include="ScoreEnum.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreManager.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyPressOnFrame.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteManager.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
