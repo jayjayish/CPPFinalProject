@@ -18,16 +18,16 @@ const double NoteManager::k_MissThreshold = 0.5;
 KeyHighlight NoteManager::m_UpperTrackHighlight = KeyHighlight();
 KeyHighlight NoteManager::m_LowerTrackHighlight = KeyHighlight();
 
-void NoteManager::UpdateNoteTracks()
+bool NoteManager::UpdateNoteTracks()
 {
 	Time timeManager;
 	double currentBeat = timeManager.CalculateCurrentBeat();
 	RythmnMapManager rythmnMapManager;
 	int mapSize = rythmnMapManager.GetSize();
 
-	if (currentBeat >= m_CurrentBPMCursor + 3.0 && m_NoteCursor >= mapSize)
+	if (currentBeat >= m_CurrentBPMCursor + k_DelayBeforeScore && m_NoteCursor >= mapSize)
 	{
-		//std::cout << "Map over\n";
+		return true;
 	}
 	else if (currentBeat >= m_CurrentBPMCursor && m_NoteCursor < mapSize)
 	{
@@ -40,7 +40,7 @@ void NoteManager::UpdateNoteTracks()
 		if (note.GetDuration() == 0.0)
 		{
 			UpdateNoteTracks();
-			return;
+			return false;
 		}
 	}
 
@@ -57,8 +57,6 @@ void NoteManager::UpdateNoteTracks()
 			if (nextNoteTime < k_MissThreshold)
 			{
 				holder->RemoveNextNote();
-
-
 				ScoreManager score;
 
 				if (nextNoteTime < k_PerfectThreshold)
@@ -73,7 +71,6 @@ void NoteManager::UpdateNoteTracks()
 					AudioManager audio;
 					audio.Instance().PlayHitSound();
 					score.Add(HitType::Good);
-					std::cout << "Good\n";
 					GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Good);
 				}
 				else
@@ -98,6 +95,19 @@ void NoteManager::UpdateNoteTracks()
 			GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Miss);
 		}
 	}
+
+	return false;
+}
+
+void NoteManager::Reset()
+{
+	m_UpperTrack.Clear();
+	m_LowerTrack.Clear();
+	m_CurrentBPMCursor = k_BeatDelay - k_ScrollDelay;
+	m_NoteCursor = 0;
+
+	m_UpperTrackHighlight = KeyHighlight();
+	m_LowerTrackHighlight = KeyHighlight();
 }
 
 void NoteManager::Draw(sf::RenderWindow& window)

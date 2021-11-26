@@ -15,5 +15,6 @@ public:
 	double GetStartOffset();
 	int GetSize();
 	void LoadMap(std::string);
+	void Delete();
 };
 

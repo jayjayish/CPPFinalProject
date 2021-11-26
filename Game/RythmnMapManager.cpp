@@ -77,6 +77,11 @@ void RythmnMapManager::LoadMap(std::string fileName)
 	timeClass.SetMapData(m_BPM, m_Offset);
 }
 
+void RythmnMapManager::Delete()
+{
+	delete m_Notes;
+}
+
 
 
 

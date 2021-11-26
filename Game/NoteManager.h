@@ -25,7 +25,8 @@ private:
 	void DrawNotes(sf::RenderWindow& window);
 	void DrawHighlight(sf::RenderWindow& window);
 public:
-	void UpdateNoteTracks();
+	bool UpdateNoteTracks();
 	void Draw(sf::RenderWindow& window);
+	void Reset();
 };
 

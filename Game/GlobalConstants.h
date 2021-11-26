@@ -11,5 +11,6 @@ extern constexpr int k_BeatDelay = 4;
 extern constexpr float k_ButtonThickness = 2.0f;
 extern constexpr double k_HighlightDuration = 0.2;
 extern constexpr float k_HighlightThickness = 5.0f;
+extern constexpr double k_DelayBeforeScore = 4.0;
 
 #endif

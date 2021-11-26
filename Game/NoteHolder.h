@@ -12,6 +12,7 @@ public:
 	double LookAtNextNote();
 	void RemoveNextNote();
 	int GetSize();
+	void Clear();
 	std::vector<double> GetAllNotes();
 };
 

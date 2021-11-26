@@ -30,6 +30,11 @@ int NoteHolder::GetSize()
 	return m_NotesInTrack.size();
 }
 
+void NoteHolder::Clear()
+{
+	m_NotesInTrack.clear();
+}
+
 std::vector<double> NoteHolder::GetAllNotes()
 {
 	return m_NotesInTrack;

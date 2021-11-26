@@ -6,15 +6,19 @@
 #include "GlobalConstants.h"
 #include "ScoreManager.h"
 
-void RenderMainMenu(sf::RenderWindow& window);
+void DrawMainMenu(sf::RenderWindow& window);
 void UpdateWindow(sf::RenderWindow& window);
+void DrawScoreScreen(sf::RenderWindow& window);
 void OnStartGame();
 void StartGameDelay();
 void UpdateGameLogic();
+void ResetGameLogic();
 bool InMenu = true;
 bool OffsetCreated = false;
 bool GameStarted = false;
 bool MusicStarted = false;
+bool MapOver = false;
+bool ScoreScreen = false;
 bool LastUpdateUpperKeyPressed = false;
 bool LastUpdateLowerKeyPressed = false;
 sf::Font m_Font;
@@ -43,6 +47,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 			{
 				// TODO Cleanup memory;
+				manager.Delete();
 				window.close();
 				return 0;
 			}
@@ -55,6 +60,7 @@ int main()
 		window.display();
 	}
 
+	manager.Delete();
 	return 0;
 }
 
@@ -62,24 +68,26 @@ void UpdateWindow(sf::RenderWindow& window)
 {
 	if (InMenu)
 	{
-		RenderMainMenu(window);
+		DrawMainMenu(window);
 	}
-	else
+	else if (GameStarted)
 	{
 		NoteManager noteManager;
 		noteManager.Draw(window);
 		ScoreManager score;
 		score.DrawScore(window, m_Font);
 	}
+	else if (ScoreScreen)
+	{
+		ScoreManager score;
+		score.DrawScoreScreen(window, m_Font);
+		DrawScoreScreen(window);
+	}
 }
 
 void UpdateGameLogic()
 {
-	if (InMenu)
-	{
-
-	}
-	else if (!MusicStarted && GameStarted)
+	if (!MusicStarted && GameStarted)
 	{
 		StartGameDelay();
 	}
@@ -89,34 +97,71 @@ void UpdateGameLogic()
 		KeyPressOnFrame keyPress;
 		keyPress.Update();
 		NoteManager noteManager;
-		noteManager.UpdateNoteTracks();
+		MapOver = noteManager.UpdateNoteTracks();
+		if (MapOver)
+		{
+			OffsetCreated = false;
+			GameStarted = false;
+			MusicStarted = false;
+			ScoreScreen = true;
+		}
 	}
 }
 
-void RenderMainMenu(sf::RenderWindow& window)
+void DrawMainMenu(sf::RenderWindow& window)
 {
 	float buttonWidth = 360.0f;
 	float buttonHeight = 100.0f;
+	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0);
 
 	sf::RectangleShape shape(sf::Vector2f(buttonWidth, buttonHeight));
 	shape.setOutlineColor(sf::Color::White);
 	shape.setOutlineThickness(1.0f);
-	shape.setPosition(sf::Vector2f(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0));
+	shape.setPosition(position);
 	shape.setFillColor(sf::Color::White);
-	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
 	sf::Text text("Start Game", m_Font, 50);
 	text.setFillColor(sf::Color::Black);
-	text.setPosition(sf::Vector2f(k_WindowWidth / 2.0 - buttonWidth / 2.0 + 50.0, k_WindowHeight / 2.0 - buttonHeight / 2.0  + 15.0));
+	text.setPosition(sf::Vector2f(position.x + 52.0, position.y + 18.0));
 
 	window.draw(shape);
 	window.draw(text);
 
-	if (mousePos.x > k_WindowWidth / 2.0 - buttonWidth / 2.0 && mousePos.x < (k_WindowWidth / 2.0 + buttonWidth / 2.0) &&
-		mousePos.y > k_WindowHeight / 2.0 - buttonHeight / 2.0 && mousePos.y < (k_WindowHeight / 2.0 + buttonHeight / 2.0) &&
+	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
+		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
 		sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		OnStartGame();
+	}
+}
+
+void DrawScoreScreen(sf::RenderWindow& window)
+{
+	float buttonWidth = 500.0f;
+	float buttonHeight = 100.0f;
+
+	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight - buttonHeight - 100);
+
+	sf::RectangleShape shape(sf::Vector2f(buttonWidth, buttonHeight));
+	shape.setOutlineColor(sf::Color::White);
+	shape.setOutlineThickness(1.0f);
+	shape.setPosition(position);
+	shape.setFillColor(sf::Color::White);
+
+	sf::Text text("Back to Main Menu", m_Font, 50);
+	text.setFillColor(sf::Color::Black);
+	text.setPosition(sf::Vector2f( position.x + 38.0, position.y + 18.0));
+
+	window.draw(shape);
+	window.draw(text);
+
+	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
+		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
+		sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		ResetGameLogic();
 	}
 }
 
@@ -141,6 +186,21 @@ void StartGameDelay()
 		AudioManager audio;
 		audio.Instance().PlayMusic();
 	}
+}
+void ResetGameLogic()
+{
+	ScoreManager score;
+	score.Reset();
+
+	NoteManager note;
+	note.Reset();
+
+	InMenu = true;
+	OffsetCreated = false;
+	GameStarted = false;
+	MusicStarted = false;
+	MapOver = false;
+	ScoreScreen = false;
 }
 
 
