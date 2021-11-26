@@ -29,6 +29,9 @@
     <ClCompile Include="KeyPressOnFrame.cpp">
       <Filter>Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="KeyHighlightStruct.cpp">
+      <Filter>Gameplay\Structs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Gameplay">
@@ -58,9 +61,6 @@
       <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="NoteTrackEnum.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="AudioManager.h">
       <Filter>Gameplay</Filter>
     </ClInclude>
@@ -73,9 +73,6 @@
     <ClInclude Include="GlobalConstants.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreEnum.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="ScoreManager.h">
       <Filter>Gameplay</Filter>
     </ClInclude>
@@ -84,6 +81,15 @@
     </ClInclude>
     <ClInclude Include="NoteManager.h">
       <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="HitType.h">
+      <Filter>Gameplay\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteTrackEnum.h">
+      <Filter>Gameplay\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyHighlightStruct.h">
+      <Filter>Gameplay\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

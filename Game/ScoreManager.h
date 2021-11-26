@@ -1,5 +1,5 @@
 #pragma once
-#include "ScoreEnum.h"
+#include "HitType.h"
 class ScoreManager
 {
 private:
@@ -9,7 +9,10 @@ private:
 	static int m_Combo;
 	static int m_Score;
 	static int m_MaxCombo;
+	static const float k_ComboLeftOffset;
+	static const float k_ComboBottomOffset;
 public:
-	void Add(ScoreEnum hit);
+	void Add(HitType hit);
+	void DrawScore(sf::RenderWindow& window, sf::Font font);
 };
 

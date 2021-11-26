@@ -4,9 +4,8 @@
 #include "RythmnMapManager.h"
 #include "NoteManager.h"
 #include "GlobalConstants.h"
+#include "ScoreManager.h"
 
-
-void RenderKeys(sf::RenderWindow& window);
 void RenderMainMenu(sf::RenderWindow& window);
 void UpdateWindow(sf::RenderWindow& window);
 void OnStartGame();
@@ -42,7 +41,11 @@ int main()
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
+			{
+				// TODO Cleanup memory;
 				window.close();
+				return 0;
+			}
 		}
 
 		window.clear();
@@ -63,9 +66,10 @@ void UpdateWindow(sf::RenderWindow& window)
 	}
 	else
 	{
-		RenderKeys(window);
 		NoteManager noteManager;
-		noteManager.DrawNotes(window);
+		noteManager.Draw(window);
+		ScoreManager score;
+		score.DrawScore(window, m_Font);
 	}
 }
 
@@ -88,7 +92,6 @@ void UpdateGameLogic()
 		noteManager.UpdateNoteTracks();
 	}
 }
-
 
 void RenderMainMenu(sf::RenderWindow& window)
 {
@@ -116,40 +119,6 @@ void RenderMainMenu(sf::RenderWindow& window)
 		OnStartGame();
 	}
 }
-
-void RenderKeys(sf::RenderWindow& window)
-{
-	sf::RectangleShape upperKey(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
-	upperKey.setOutlineColor(sf::Color::Cyan);
-	upperKey.setOutlineThickness(1.0f);
-	upperKey.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 - k_KeyVerticalOffset));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-	{
-		upperKey.setFillColor(sf::Color::Cyan);
-	}
-	else
-	{
-		upperKey.setFillColor(sf::Color::Black);
-	}
-
-	sf::RectangleShape lowerKey(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
-	lowerKey.setOutlineColor(sf::Color::Yellow);
-	lowerKey.setOutlineThickness(1.0f);
-	lowerKey.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + k_KeyVerticalOffset));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
-	{
-		lowerKey.setFillColor(sf::Color::Yellow);
-	}
-	else
-	{
-		lowerKey.setFillColor(sf::Color::Black);
-	}
-
-	window.draw(upperKey);
-	window.draw(lowerKey);
-
-}
-
 
 void OnStartGame()
 {

@@ -4,13 +4,19 @@
 #include "RythmnMapManager.h"
 #include "GlobalConstants.h"
 #include "AudioManager.h"
+#include "ScoreManager.h"
 
 NoteHolder NoteManager::m_UpperTrack = NoteHolder();
 NoteHolder NoteManager::m_LowerTrack = NoteHolder();
-const double NoteManager::m_ScrollDelay = 2.0;
-double NoteManager::m_CurrentBPMCursor = k_BeatDelay - m_ScrollDelay;
+const double NoteManager::k_ScrollDelay = 2.0;
+double NoteManager::m_CurrentBPMCursor = k_BeatDelay - k_ScrollDelay;
 int NoteManager::m_NoteCursor = 0;
-const double NoteManager::m_LateThreshold = 0.2;
+const double NoteManager::k_PerfectThreshold = 0.1;
+const double NoteManager::k_GoodThreshold = 0.25;
+const double NoteManager::k_MissThreshold = 0.5;
+
+KeyHighlight NoteManager::m_UpperTrackHighlight = KeyHighlight();
+KeyHighlight NoteManager::m_LowerTrackHighlight = KeyHighlight();
 
 void NoteManager::UpdateNoteTracks()
 {
@@ -26,7 +32,7 @@ void NoteManager::UpdateNoteTracks()
 	else if (currentBeat >= m_CurrentBPMCursor && m_NoteCursor < mapSize)
 	{
 		NoteObject note = rythmnMapManager.GetNote(m_NoteCursor);
-		GetTrack(note.GetTrack())->AddNote(m_CurrentBPMCursor + m_ScrollDelay);
+		GetTrack(note.GetTrack())->AddNote(m_CurrentBPMCursor + k_ScrollDelay);
 
 		m_CurrentBPMCursor += note.GetDuration();
 		m_NoteCursor += 1;
@@ -45,17 +51,38 @@ void NoteManager::UpdateNoteTracks()
 
 		if (keyInput.KeyPressed((NoteTrack) i))
 		{
-
 			NoteHolder* holder = GetTrack((NoteTrack)i);
+			double nextNoteTime = abs(holder->LookAtNextNote() - currentBeat);
 
-			std::cout << holder->LookAtNextNote() << "\n";
-
-			if (abs(holder->LookAtNextNote() - currentBeat) < m_LateThreshold)
+			if (nextNoteTime < k_MissThreshold)
 			{
 				holder->RemoveNextNote();
-				AudioManager audio;
-				audio.Instance().PlayHitSound();
+
+
+				ScoreManager score;
+
+				if (nextNoteTime < k_PerfectThreshold)
+				{
+					AudioManager audio;
+					audio.Instance().PlayHitSound();
+					score.Add(HitType::Perfect);
+					GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Perfect);
+				}
+				else if (nextNoteTime < k_GoodThreshold)
+				{
+					AudioManager audio;
+					audio.Instance().PlayHitSound();
+					score.Add(HitType::Good);
+					std::cout << "Good\n";
+					GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Good);
+				}
+				else
+				{
+					score.Add(HitType::Miss);
+					GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Miss);
+				}
 			}
+
 		}
 	}
 
@@ -63,12 +90,24 @@ void NoteManager::UpdateNoteTracks()
 	{
 		NoteHolder* holder = GetTrack((NoteTrack)i);
 		if (holder->GetSize() != 0 &&
-			holder->LookAtNextNote() - currentBeat < -m_LateThreshold)
+			holder->LookAtNextNote() - currentBeat < -k_GoodThreshold)
 		{
 			holder->RemoveNextNote();
+			ScoreManager score;
+			score.Add(HitType::Miss);
+			GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Miss);
 		}
 	}
 }
+
+void NoteManager::Draw(sf::RenderWindow& window)
+{
+	DrawHighlight(window);
+	DrawKeys(window);
+
+	DrawNotes(window);
+}
+
 
 void NoteManager::DrawNotes(sf::RenderWindow& window)
 {
@@ -85,7 +124,7 @@ void NoteManager::DrawNotes(sf::RenderWindow& window)
 			for (auto pos = trackVector.cbegin(); pos != trackVector.cend(); ++pos)
 			{
 				double timeUntilHit = *pos - currentBeat;
-				double horizontalPosition = Lerp(k_KeyHorizontalPosition, k_WindowWidth, timeUntilHit / m_ScrollDelay);
+				double horizontalPosition = Lerp(k_KeyHorizontalPosition, k_WindowWidth, timeUntilHit / k_ScrollDelay);
 
 				sf::RectangleShape rect(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
 				rect.setOutlineColor(sf::Color::Cyan);
@@ -97,6 +136,57 @@ void NoteManager::DrawNotes(sf::RenderWindow& window)
 
 				window.draw(rect);
 			}
+		}
+	}
+}
+
+void NoteManager::DrawKeys(sf::RenderWindow& window)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		sf::RectangleShape key(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
+		key.setOutlineColor(i?sf::Color::Yellow:sf::Color::Cyan);
+		key.setOutlineThickness(k_ButtonThickness);
+		key.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + (-k_KeyVerticalOffset + 2 * i * k_KeyVerticalOffset)));
+		if (sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::J : sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::K : sf::Keyboard::Key::D))
+		{
+			key.setFillColor(i ? sf::Color::Yellow : sf::Color::Cyan);
+		}
+		else
+		{
+			key.setFillColor(sf::Color::Black);
+		}
+		window.draw(key);
+	}
+}
+
+void NoteManager::DrawHighlight(sf::RenderWindow& window)
+{
+	Time time;
+	double currentBeat = time.CalculateCurrentBeat();
+
+	for (int i = 0; i < 2; i++)
+	{
+		KeyHighlight highlight = GetKeyHighlight((NoteTrack)i);
+		if (currentBeat - highlight.m_Beat < k_HighlightDuration && highlight.m_HitType != HitType::Perfect)
+		{
+			sf::RectangleShape key(sf::Vector2f(k_KeyButtonWidth + k_HighlightThickness * 2, k_KeyButtonHeight + k_HighlightThickness * 2));
+			//key.setOutlineColor(i ? sf::Color::Yellow : sf::Color::Cyan);
+			key.setOutlineThickness(k_HighlightThickness);
+			key.setPosition(sf::Vector2f(
+				k_KeyHorizontalPosition - k_HighlightThickness,
+				k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + (-k_KeyVerticalOffset + 2 * i * k_KeyVerticalOffset) - k_HighlightThickness
+			));
+			key.setFillColor(sf::Color::Black);
+			if (highlight.m_HitType == HitType::Good)
+			{
+				key.setOutlineColor(sf::Color::Green);
+			}
+			else if (highlight.m_HitType == HitType::Miss)
+			{
+				key.setOutlineColor(sf::Color::Red);
+			}
+			window.draw(key);
 		}
 	}
 }
@@ -115,6 +205,17 @@ NoteHolder* NoteManager::GetTrack(NoteTrack track)
 	throw "This shouldn't happen";
 }
 
+KeyHighlight& NoteManager::GetKeyHighlight(NoteTrack track)
+{
+	if (track == NoteTrack::Upper)
+	{
+		return m_UpperTrackHighlight;
+	}
+	else if (track == NoteTrack::Lower)
+	{
+		return m_LowerTrackHighlight;
+	}
+}
 
 double inline NoteManager::Lerp(double a, double b, double t)
 {

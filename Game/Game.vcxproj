@@ -195,6 +195,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="KeyHighlightStruct.cpp" />
     <ClCompile Include="KeyPressOnFrame.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NoteManager.cpp" />
@@ -213,6 +214,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="GlobalConstants.h" />
+    <ClInclude Include="KeyHighlightStruct.h" />
     <ClInclude Include="KeyPressOnFrame.h" />
     <ClInclude Include="NoteManager.h" />
     <ClInclude Include="NoteObject.h" />
@@ -221,7 +223,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RythmnMapManager.h" />
-    <ClInclude Include="ScoreEnum.h" />
+    <ClInclude Include="HitType.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
