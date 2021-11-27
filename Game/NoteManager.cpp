@@ -8,7 +8,7 @@
 
 NoteHolder NoteManager::m_UpperTrack = NoteHolder();
 NoteHolder NoteManager::m_LowerTrack = NoteHolder();
-const double NoteManager::k_ScrollDelay = 2.0;
+const double NoteManager::k_ScrollDelay = 3.0;
 double NoteManager::m_CurrentBPMCursor = k_BeatDelay - k_ScrollDelay;
 int NoteManager::m_NoteCursor = 0;
 const double NoteManager::k_PerfectThreshold = 0.1;
