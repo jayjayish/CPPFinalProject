@@ -6,9 +6,9 @@
 #include "GlobalConstants.h"
 #include "ScoreManager.h"
 
-void DrawMainMenu(sf::RenderWindow& window);
-void UpdateWindow(sf::RenderWindow& window);
-void DrawScoreScreen(sf::RenderWindow& window);
+void DrawMainMenu(sf::RenderWindow& window, sf::Font& font);
+void UpdateWindow(sf::RenderWindow& window , sf::Sprite&, sf::Font& font);
+void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font);
 void OnStartGame(Difficulty);
 void StartGameDelay();
 void UpdateGameLogic();
@@ -21,7 +21,6 @@ bool MapOver = false;
 bool ScoreScreen = false;
 bool LastUpdateUpperKeyPressed = false;
 bool LastUpdateLowerKeyPressed = false;
-sf::Font m_Font;
 
 int main()
 {
@@ -30,9 +29,18 @@ int main()
 	RythmnMapManager manager;
 	manager.LoadMap();
 
+	sf::Texture m_Image;
+	if (!m_Image.loadFromFile("Resources/menuImage1.png"))
+	{
+		throw "Image file not found";
+	}
+	sf::Sprite m_SpriteImage(m_Image);
+	m_SpriteImage.setPosition(k_WindowWidth / 2.0 - m_Image.getSize().x / 2.0, 100.0f);
+
 	AudioManager audioManager;
 	audioManager.Instance().Initialize();
 
+	sf::Font m_Font;
 	if (!m_Font.loadFromFile("Resources/arial.ttf"))
 	{
 		throw "Font file not found";
@@ -55,7 +63,7 @@ int main()
 
 		window.clear();
 		UpdateGameLogic();
-		UpdateWindow(window);
+		UpdateWindow(window, m_SpriteImage, m_Font);
 
 		window.display();
 	}
@@ -64,24 +72,25 @@ int main()
 	return 0;
 }
 
-void UpdateWindow(sf::RenderWindow& window)
+void UpdateWindow(sf::RenderWindow& window, sf::Sprite& sprite, sf::Font& font)
 {
 	if (InMenu)
 	{
-		DrawMainMenu(window);
+		DrawMainMenu(window, font);
+		window.draw(sprite);
 	}
 	else if (GameStarted)
 	{
 		NoteManager noteManager;
 		noteManager.Draw(window);
 		ScoreManager score;
-		score.DrawScore(window, m_Font);
+		score.DrawScore(window, font);
 	}
 	else if (ScoreScreen)
 	{
 		ScoreManager score;
-		score.DrawScoreScreen(window, m_Font);
-		DrawScoreScreen(window);
+		score.DrawScoreScreen(window, font);
+		DrawScoreScreen(window, font);
 	}
 }
 
@@ -110,12 +119,12 @@ void UpdateGameLogic()
 	}
 }
 
-void DrawMainMenu(sf::RenderWindow& window)
+void DrawMainMenu(sf::RenderWindow& window, sf::Font& font)
 {
 	const float buttonWidth = 360.0f;
 	const float buttonHeight = 100.0f;
 	const float buttonOffset = 150.0f;
-	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0 + 50.0);
+	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0 + 150.0);
 
 	sf::RectangleShape easyButton(sf::Vector2f(buttonWidth, buttonHeight));
 	easyButton.setOutlineColor(sf::Color::White);
@@ -123,7 +132,7 @@ void DrawMainMenu(sf::RenderWindow& window)
 	easyButton.setPosition(position);
 	easyButton.setFillColor(sf::Color::White);
 
-	sf::Text normalText("Start Normal", m_Font, 50);
+	sf::Text normalText("Start Normal", font, 50);
 	normalText.setFillColor(sf::Color::Black);
 	normalText.setPosition(sf::Vector2f(position.x + 41.0, position.y + 18.0));
 
@@ -146,7 +155,7 @@ void DrawMainMenu(sf::RenderWindow& window)
 	hardButton.setPosition(position);
 	hardButton.setFillColor(sf::Color::White);
 
-	sf::Text hardText("Start Hard", m_Font, 50);
+	sf::Text hardText("Start Hard", font, 50);
 	hardText.setFillColor(sf::Color::Black);
 	hardText.setPosition(sf::Vector2f(position.x + 63.0, position.y + 18.0));
 
@@ -161,7 +170,7 @@ void DrawMainMenu(sf::RenderWindow& window)
 	}
 }
 
-void DrawScoreScreen(sf::RenderWindow& window)
+void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font)
 {
 	float buttonWidth = 500.0f;
 	float buttonHeight = 100.0f;
@@ -174,7 +183,7 @@ void DrawScoreScreen(sf::RenderWindow& window)
 	shape.setPosition(position);
 	shape.setFillColor(sf::Color::White);
 
-	sf::Text text("Back to Main Menu", m_Font, 50);
+	sf::Text text("Back to Main Menu", font, 50);
 	text.setFillColor(sf::Color::Black);
 	text.setPosition(sf::Vector2f( position.x + 38.0, position.y + 18.0));
 
@@ -198,7 +207,6 @@ void OnStartGame(Difficulty diff)
 	Time time;
 	time.SetTimeStart();
 
-	//std::cout << "Game Started \n";
 	InMenu = false;
 	GameStarted = true;
 }
@@ -230,5 +238,4 @@ void ResetGameLogic()
 	MapOver = false;
 	ScoreScreen = false;
 }
-
 
