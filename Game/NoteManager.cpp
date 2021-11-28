@@ -155,12 +155,12 @@ void NoteManager::DrawKeys(sf::RenderWindow& window)
 	for (int i = 0; i < 2; i++)
 	{
 		sf::RectangleShape key(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
-		key.setOutlineColor(i?sf::Color::Yellow:sf::Color::Cyan);
+		key.setOutlineColor(i ? sf::Color::Cyan : sf::Color::Yellow);
 		key.setOutlineThickness(k_ButtonThickness);
 		key.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + (-k_KeyVerticalOffset + 2 * i * k_KeyVerticalOffset)));
 		if (sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::J : sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::K : sf::Keyboard::Key::D))
 		{
-			key.setFillColor(i ? sf::Color::Yellow : sf::Color::Cyan);
+			key.setFillColor(i ? sf::Color::Cyan : sf::Color::Yellow);
 		}
 		else
 		{
