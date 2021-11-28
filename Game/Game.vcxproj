@@ -213,6 +213,7 @@ xcopy /y /d  "$(SolutionDir)Externals\SFML\$(PlatformShortName)\bin\sfml-window-
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="DifficultyEnum.h" />
     <ClInclude Include="GlobalConstants.h" />
     <ClInclude Include="KeyHighlightStruct.h" />
     <ClInclude Include="KeyPressOnFrame.h" />

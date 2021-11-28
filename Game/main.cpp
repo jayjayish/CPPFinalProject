@@ -9,7 +9,7 @@
 void DrawMainMenu(sf::RenderWindow& window);
 void UpdateWindow(sf::RenderWindow& window);
 void DrawScoreScreen(sf::RenderWindow& window);
-void OnStartGame();
+void OnStartGame(Difficulty);
 void StartGameDelay();
 void UpdateGameLogic();
 void ResetGameLogic();
@@ -28,7 +28,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "IT IS ALIVE!", sf::Style::Titlebar | sf::Style::Close);
 
 	RythmnMapManager manager;
-	manager.LoadMap("Resources/NeeNeeNee.txt");
+	manager.LoadMap();
 
 	AudioManager audioManager;
 	audioManager.Instance().Initialize();
@@ -112,29 +112,52 @@ void UpdateGameLogic()
 
 void DrawMainMenu(sf::RenderWindow& window)
 {
-	float buttonWidth = 360.0f;
-	float buttonHeight = 100.0f;
-	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0);
+	const float buttonWidth = 360.0f;
+	const float buttonHeight = 100.0f;
+	const float buttonOffset = 150.0f;
+	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0 + 50.0);
 
-	sf::RectangleShape shape(sf::Vector2f(buttonWidth, buttonHeight));
-	shape.setOutlineColor(sf::Color::White);
-	shape.setOutlineThickness(1.0f);
-	shape.setPosition(position);
-	shape.setFillColor(sf::Color::White);
+	sf::RectangleShape easyButton(sf::Vector2f(buttonWidth, buttonHeight));
+	easyButton.setOutlineColor(sf::Color::White);
+	easyButton.setOutlineThickness(1.0f);
+	easyButton.setPosition(position);
+	easyButton.setFillColor(sf::Color::White);
 
-	sf::Text text("Start Game", m_Font, 50);
-	text.setFillColor(sf::Color::Black);
-	text.setPosition(sf::Vector2f(position.x + 52.0, position.y + 18.0));
+	sf::Text normalText("Start Normal", m_Font, 50);
+	normalText.setFillColor(sf::Color::Black);
+	normalText.setPosition(sf::Vector2f(position.x + 41.0, position.y + 18.0));
 
-	window.draw(shape);
-	window.draw(text);
+	window.draw(easyButton);
+	window.draw(normalText);
 
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
 		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
 		sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		OnStartGame();
+		OnStartGame(Difficulty::Normal);
+	}
+
+	position.y += buttonOffset;
+
+	sf::RectangleShape hardButton(sf::Vector2f(buttonWidth, buttonHeight));
+	hardButton.setOutlineColor(sf::Color::White);
+	hardButton.setOutlineThickness(1.0f);
+	hardButton.setPosition(position);
+	hardButton.setFillColor(sf::Color::White);
+
+	sf::Text hardText("Start Hard", m_Font, 50);
+	hardText.setFillColor(sf::Color::Black);
+	hardText.setPosition(sf::Vector2f(position.x + 63.0, position.y + 18.0));
+
+	window.draw(hardButton);
+	window.draw(hardText);
+
+	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
+		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
+		sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		OnStartGame(Difficulty::Hard);
 	}
 }
 
@@ -167,8 +190,11 @@ void DrawScoreScreen(sf::RenderWindow& window)
 	}
 }
 
-void OnStartGame()
+void OnStartGame(Difficulty diff)
 {
+	RythmnMapManager manager;
+	manager.SetDifficulty(diff);
+
 	Time time;
 	time.SetTimeStart();
 
@@ -181,7 +207,7 @@ void StartGameDelay()
 {
 	Time time;
 	RythmnMapManager manager;
-	if (time.CalculateCurrentBeat() > k_BeatDelay - manager.GetStartOffset())
+	if (time.CalculateCurrentBeat() > k_BeatDelay - k_Offset)
 	{
 		MusicStarted = true;
 

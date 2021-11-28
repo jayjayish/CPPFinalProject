@@ -1,20 +1,22 @@
 #pragma once
 #include "NoteObject.h"
 #include "NoteTrackEnum.h"
+#include "DifficultyEnum.h"
 
 class RythmnMapManager
 {
 private:
-	static int m_Size;
-	static double m_Offset;
-	static double m_BPM;
-	static NoteObject* m_Notes;
+	static const std::string k_NormalMapFile;
+	static const std::string k_HardMapFile;
+	static int m_Size[2];
+	static NoteObject* m_Notes[2];
+	static Difficulty m_Difficulty;
+	void LoadMap(std::string, Difficulty diff);
 public:
 	NoteObject GetNote(int);
-	double GetBPM();
-	double GetStartOffset();
 	int GetSize();
-	void LoadMap(std::string);
+	void LoadMap();
 	void Delete();
+	void SetDifficulty(Difficulty diff);
 };
 

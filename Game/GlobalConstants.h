@@ -12,5 +12,7 @@ extern constexpr float k_ButtonThickness = 2.0f;
 extern constexpr double k_HighlightDuration = 0.2;
 extern constexpr float k_HighlightThickness = 5.0f;
 extern constexpr double k_DelayBeforeScore = 4.0;
+extern constexpr double k_Offset = 1.18;
+extern constexpr double k_BPM = 145.0;
 
 #endif

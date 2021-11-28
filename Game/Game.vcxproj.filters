@@ -91,6 +91,9 @@
     <ClInclude Include="KeyHighlightStruct.h">
       <Filter>Gameplay\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="DifficultyEnum.h">
+      <Filter>Gameplay\Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

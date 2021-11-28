@@ -3,32 +3,31 @@
 #include "RythmnMapManager.h"
 #include "Time.h"
 
-int RythmnMapManager::m_Size = 0;
-double RythmnMapManager::m_Offset = 0.0;
-double RythmnMapManager::m_BPM = 0.0;
-NoteObject* RythmnMapManager::m_Notes = nullptr;
+const std::string RythmnMapManager::k_NormalMapFile = "Resources/NeeNeeNeeNormal.txt";
+const std::string RythmnMapManager::k_HardMapFile = "Resources/NeeNeeNeeHard.txt";
+int RythmnMapManager::m_Size[] = { 0 , 0 };
+NoteObject* RythmnMapManager::m_Notes[] = { nullptr, nullptr };
+Difficulty RythmnMapManager::m_Difficulty = Difficulty::Hard;
+
+
 
 NoteObject RythmnMapManager::GetNote(int i)
 {
-	return m_Notes[i];
-}
-
-double RythmnMapManager::GetBPM()
-{
-	return m_BPM;
-}
-
-double RythmnMapManager::GetStartOffset()
-{
-	return m_Offset;
+	return m_Notes[(int) m_Difficulty][i];
 }
 
 int RythmnMapManager::GetSize()
 {
-	return m_Size;
+	return m_Size[(int) m_Difficulty];
 }
 
-void RythmnMapManager::LoadMap(std::string fileName)
+void RythmnMapManager::LoadMap()
+{
+	LoadMap(k_NormalMapFile, Difficulty::Normal);
+	LoadMap(k_HardMapFile, Difficulty::Hard);
+}
+
+void RythmnMapManager::LoadMap(std::string fileName, Difficulty diff)
 {
 	std::fstream file;
 	file.open(fileName, std::ios::in);
@@ -44,42 +43,37 @@ void RythmnMapManager::LoadMap(std::string fileName)
 		{
 			if (lineNumber == 0)
 			{
-				m_BPM = std::stod(line);
-			}
-			else if (lineNumber == 1)
-			{
-				m_Offset = std::stod(line);
-			}
-			else if (lineNumber == 2)
-			{
-				m_Size = std::stoi(line);
+				m_Size[(int) diff] = std::stoi(line);
 			}
 			else
-			{	
-				if (lineNumber == 3)
+			{
+				if (lineNumber == 1)
 				{
-					m_Notes = new NoteObject[m_Size];
+					m_Notes[(int)diff] = new NoteObject[m_Size[(int)diff]];
 				}
 				int start = 0;
 				int end = line.find(',');
-				int track = std::stoi( line.substr(start, end - start));
+				int track = std::stoi(line.substr(start, end - start));
 				start = end + 1;
 				double duration = std::stod(line.substr(start, end - start));
 
-				m_Notes[lineNumber - 3] = NoteObject((NoteTrack) track, duration);
+				m_Notes[(int)diff][lineNumber - 1] = NoteObject((NoteTrack)track, duration);
 			}
 			lineNumber += 1;
 		}
 	}
 	file.close();
-
-	Time timeClass;
-	timeClass.SetMapData(m_BPM, m_Offset);
 }
 
 void RythmnMapManager::Delete()
 {
-	delete m_Notes;
+	delete m_Notes[0];
+	delete m_Notes[1];
+}
+
+void RythmnMapManager::SetDifficulty(Difficulty diff)
+{
+	m_Difficulty = diff;
 }
 
 

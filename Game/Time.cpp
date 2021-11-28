@@ -1,9 +1,10 @@
 #include "Precompiled.h"
 #include "Time.h"
+#include "GlobalConstants.h"
 
 std::chrono::time_point<std::chrono::steady_clock> Time::m_GlobalStartTime = std::chrono::time_point<std::chrono::steady_clock>::max();
-double Time::m_BPM = 0.0;
-double Time::m_Offset = 0.0;
+
+constexpr double k_BPS = k_BPM / 60.0;
 
 double Time::CalculateTimeDifference()
 {
@@ -13,18 +14,12 @@ double Time::CalculateTimeDifference()
 
 double Time::CalculateCurrentBeat()
 {
-	return CalculateTimeDifference() * m_BPM;
+	return CalculateTimeDifference() * k_BPS;
 }
 
 void Time::SetTimeStart()
 {
 	m_GlobalStartTime = std::chrono::steady_clock::now();
-}
-
-void Time::SetMapData(double bpm, double offset)
-{
-	m_BPM = bpm / 60.0;
-	m_Offset = offset;
 }
 
 Time::Time()
