@@ -18,19 +18,19 @@
       <Filter>Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="RythmnMapManager.cpp">
-      <Filter>Gameplay\Maps</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreManager.cpp">
-      <Filter>Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="NoteManager.cpp">
-      <Filter>Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyPressOnFrame.cpp">
-      <Filter>Gameplay</Filter>
+      <Filter>Gameplay\Static Classes</Filter>
     </ClCompile>
     <ClCompile Include="KeyHighlightStruct.cpp">
       <Filter>Gameplay\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="NoteManager.cpp">
+      <Filter>Gameplay\Static Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreManager.cpp">
+      <Filter>Gameplay\Static Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyPressOnFrame.cpp">
+      <Filter>Gameplay\Static Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +46,7 @@
     <Filter Include="Global">
       <UniqueIdentifier>{92f1c73a-c2ea-4322-afec-74c388668350}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gameplay\Maps">
+    <Filter Include="Gameplay\Static Classes">
       <UniqueIdentifier>{227471a7-cb06-4cf9-8b84-4a723af5aa53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -65,22 +65,13 @@
       <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="RythmnMapManager.h">
-      <Filter>Gameplay\Maps</Filter>
+      <Filter>Gameplay\Static Classes</Filter>
     </ClInclude>
     <ClInclude Include="NoteObject.h">
       <Filter>Gameplay\Structs</Filter>
     </ClInclude>
     <ClInclude Include="GlobalConstants.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreManager.h">
-      <Filter>Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyPressOnFrame.h">
-      <Filter>Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="NoteManager.h">
-      <Filter>Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="HitType.h">
       <Filter>Gameplay\Structs</Filter>
@@ -93,6 +84,15 @@
     </ClInclude>
     <ClInclude Include="DifficultyEnum.h">
       <Filter>Gameplay\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteManager.h">
+      <Filter>Gameplay\Static Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreManager.h">
+      <Filter>Gameplay\Static Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyPressOnFrame.h">
+      <Filter>Gameplay\Static Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

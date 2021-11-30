@@ -11,12 +11,16 @@ private:
 	static int m_Size[2];
 	static NoteObject* m_Notes[2];
 	static Difficulty m_Difficulty;
-	void LoadMap(std::string, Difficulty diff);
+	static void LoadMap(std::string, Difficulty diff);
 public:
-	NoteObject GetNote(int);
-	int GetSize();
-	void LoadMap();
-	void Delete();
-	void SetDifficulty(Difficulty diff);
+	static NoteObject GetNote(int);
+	static int GetSize();
+	static void LoadMap();
+	static void Delete();
+	static void SetDifficulty(Difficulty diff);
+
+	RythmnMapManager() = default;
+	RythmnMapManager(const RythmnMapManager&) = delete;
+	RythmnMapManager& operator=(const RythmnMapManager&) = delete;
 };
 

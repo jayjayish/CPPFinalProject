@@ -6,14 +6,15 @@
 #include "AudioManager.h"
 #include "ScoreManager.h"
 
-NoteHolder NoteManager::m_UpperTrack = NoteHolder();
-NoteHolder NoteManager::m_LowerTrack = NoteHolder();
+NoteHolder NoteManager::m_UpperTrack = std::move(NoteHolder());
+NoteHolder NoteManager::m_LowerTrack = std::move(NoteHolder());
 const double NoteManager::k_ScrollDelay = 3.0;
 double NoteManager::m_CurrentBPMCursor = k_BeatDelay - k_ScrollDelay;
 int NoteManager::m_NoteCursor = 0;
 const double NoteManager::k_PerfectThreshold = 0.1;
 const double NoteManager::k_GoodThreshold = 0.25;
 const double NoteManager::k_MissThreshold = 0.5;
+AudioManager* NoteManager::m_AudioManager = nullptr;
 
 KeyHighlight NoteManager::m_UpperTrackHighlight = KeyHighlight();
 KeyHighlight NoteManager::m_LowerTrackHighlight = KeyHighlight();
@@ -61,15 +62,13 @@ bool NoteManager::UpdateNoteTracks()
 
 				if (nextNoteTime < k_PerfectThreshold)
 				{
-					AudioManager audio;
-					audio.Instance().PlayHitSound();
+					m_AudioManager->PlayHitSound();
 					score.Add(HitType::Perfect);
 					GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Perfect);
 				}
 				else if (nextNoteTime < k_GoodThreshold)
 				{
-					AudioManager audio;
-					audio.Instance().PlayHitSound();
+					m_AudioManager->PlayHitSound();
 					score.Add(HitType::Good);
 					GetKeyHighlight((NoteTrack)i) = KeyHighlight(currentBeat, HitType::Good);
 				}
@@ -181,7 +180,6 @@ void NoteManager::DrawHighlight(sf::RenderWindow& window)
 		if (currentBeat - highlight.m_Beat < k_HighlightDuration && highlight.m_HitType != HitType::Perfect)
 		{
 			sf::RectangleShape key(sf::Vector2f(k_KeyButtonWidth + k_HighlightThickness * 2, k_KeyButtonHeight + k_HighlightThickness * 2));
-			//key.setOutlineColor(i ? sf::Color::Yellow : sf::Color::Cyan);
 			key.setOutlineThickness(k_HighlightThickness);
 			key.setPosition(sf::Vector2f(
 				k_KeyHorizontalPosition - k_HighlightThickness,

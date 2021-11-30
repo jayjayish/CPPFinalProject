@@ -10,8 +10,8 @@ void DrawMainMenu(sf::RenderWindow& window, sf::Font& font);
 void UpdateWindow(sf::RenderWindow& window , sf::Sprite&, sf::Font& font);
 void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font);
 void OnStartGame(Difficulty);
-void StartGameDelay();
-void UpdateGameLogic();
+void StartGameDelay(AudioManager& audio);
+void UpdateGameLogic(AudioManager& audio);
 void ResetGameLogic();
 bool InMenu = true;
 bool OffsetCreated = false;
@@ -23,7 +23,7 @@ bool ExitGame = false;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "IT IS ALIVE!", sf::Style::Titlebar | sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode(k_WindowWidth, k_WindowHeight), "Nee", sf::Style::Titlebar | sf::Style::Close);
 
 	RythmnMapManager manager;
 	manager.LoadMap();
@@ -37,7 +37,10 @@ int main()
 	m_SpriteImage.setPosition(k_WindowWidth / 2.0 - m_Image.getSize().x / 2.0, 70.0f);
 
 	AudioManager audioManager;
-	audioManager.Instance().Initialize();
+	audioManager.Initialize();
+
+	NoteManager noteManager;
+	noteManager.m_AudioManager = &audioManager;
 
 	sf::Font m_Font;
 	if (!m_Font.loadFromFile("Resources/arial.ttf"))
@@ -66,7 +69,7 @@ int main()
 		}
 
 		window.clear();
-		UpdateGameLogic();
+		UpdateGameLogic(audioManager);
 		UpdateWindow(window, m_SpriteImage, m_Font);
 
 		window.display();
@@ -98,11 +101,11 @@ void UpdateWindow(sf::RenderWindow& window, sf::Sprite& sprite, sf::Font& font)
 	}
 }
 
-void UpdateGameLogic()
+void UpdateGameLogic(AudioManager& audio)
 {
 	if (!MusicStarted && GameStarted)
 	{
-		StartGameDelay();
+		StartGameDelay(audio);
 	}
 
 	KeyPressOnFrame keyPress;
@@ -114,8 +117,7 @@ void UpdateGameLogic()
 		MapOver = noteManager.UpdateNoteTracks();
 		if (MapOver)
 		{
-			AudioManager audio; 
-			audio.Instance().StopMusic();
+			audio.StopMusic();
 			OffsetCreated = false;
 			GameStarted = false;
 			MusicStarted = false;
@@ -240,18 +242,17 @@ void OnStartGame(Difficulty diff)
 	GameStarted = true;
 }
 
-void StartGameDelay()
+void StartGameDelay(AudioManager& audio)
 {
 	Time time;
 	RythmnMapManager manager;
-	if (time.CalculateCurrentBeat() > k_BeatDelay - k_Offset)
+	if (time.CalculateCurrentBeat() >= k_BeatDelay - k_Offset)
 	{
 		MusicStarted = true;
-
-		AudioManager audio;
-		audio.Instance().PlayMusic();
+		audio.PlayMusic();
 	}
 }
+
 void ResetGameLogic()
 {
 	ScoreManager score;

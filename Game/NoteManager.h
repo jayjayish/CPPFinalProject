@@ -2,6 +2,7 @@
 #include "NoteHolder.h"
 #include "KeyPressOnFrame.h"
 #include "KeyHighlightStruct.h"
+#include "AudioManager.h"
 
 class NoteManager
 {
@@ -17,16 +18,20 @@ private:
 	static KeyHighlight m_UpperTrackHighlight;
 	static KeyHighlight m_LowerTrackHighlight;
 
+	static NoteHolder* GetTrack(NoteTrack);
+	static KeyHighlight& GetKeyHighlight(NoteTrack track);
+	static void DrawKeys(sf::RenderWindow& window);
+	static void DrawNotes(sf::RenderWindow& window);
+	static void DrawHighlight(sf::RenderWindow& window);
 	static double inline Lerp(double a, double b, double t);
-
-	NoteHolder* GetTrack(NoteTrack);
-	KeyHighlight& GetKeyHighlight(NoteTrack track);
-	void DrawKeys(sf::RenderWindow& window);
-	void DrawNotes(sf::RenderWindow& window);
-	void DrawHighlight(sf::RenderWindow& window);
 public:
-	bool UpdateNoteTracks();
-	void Draw(sf::RenderWindow& window);
-	void Reset();
+	static AudioManager* m_AudioManager;
+	static bool UpdateNoteTracks();
+	static void Draw(sf::RenderWindow& window);
+	static void Reset();
+
+	NoteManager() = default;
+	NoteManager(const NoteManager&) = delete;
+	NoteManager& operator=(const NoteManager&) = delete;
 };
 

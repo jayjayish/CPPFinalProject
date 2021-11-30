@@ -15,8 +15,12 @@ private:
 	static bool MousePressedPrev;
 	static bool MousePressed;
 public:
-	bool MouseLeftPressed();
-	bool KeyPressed(NoteTrack);
-	void Update();
+	static bool MouseLeftPressed();
+	static bool KeyPressed(NoteTrack);
+	static void Update();
+
+	KeyPressOnFrame() = default;
+	KeyPressOnFrame(const KeyPressOnFrame&) = delete;
+	KeyPressOnFrame& operator=(const KeyPressOnFrame&) = delete;
 };
 

@@ -7,12 +7,18 @@ private:
 	const double k_ScrollTime = 2;
 	std::vector<double> m_NotesInTrack;
 public:
-	NoteHolder() = default;
 	void AddNote(double);
 	double LookAtNextNote();
 	void RemoveNextNote();
 	int GetSize();
 	void Clear();
 	std::vector<double> GetAllNotes();
+
+	NoteHolder() = default;
+	~NoteHolder() = default;
+	NoteHolder(const NoteHolder&) = delete;
+	NoteHolder(NoteHolder&&) = default;
+	NoteHolder& operator=(const NoteHolder&) = delete;
+	NoteHolder& operator=(NoteHolder&&) = default;
 };
 

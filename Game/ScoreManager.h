@@ -16,12 +16,16 @@ private:
 	static const float k_ScoreScreenTopOffset;
 	static const float k_ScoreScreenLineSpacing;
 
-	void CalculateAccuracy();
-	std::string MakePadding(int i);
+	static void CalculateAccuracy();
+	static std::string MakePadding(int i);
 public:
-	void Add(HitType hit);
-	void DrawScore(sf::RenderWindow& window, sf::Font font);
-	void DrawScoreScreen(sf::RenderWindow& window, sf::Font font);
-	void Reset();
+	static void Add(HitType hit);
+	static void DrawScore(sf::RenderWindow& window, sf::Font font);
+	static void DrawScoreScreen(sf::RenderWindow& window, sf::Font font);
+	static void Reset();
+
+	ScoreManager() = default;
+	ScoreManager(const ScoreManager&) = delete;
+	ScoreManager& operator=(const ScoreManager&) = delete;
 };
 

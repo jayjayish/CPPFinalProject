@@ -9,8 +9,6 @@ int RythmnMapManager::m_Size[] = { 0 , 0 };
 NoteObject* RythmnMapManager::m_Notes[] = { nullptr, nullptr };
 Difficulty RythmnMapManager::m_Difficulty = Difficulty::Hard;
 
-
-
 NoteObject RythmnMapManager::GetNote(int i)
 {
 	return m_Notes[(int) m_Difficulty][i];
@@ -67,8 +65,11 @@ void RythmnMapManager::LoadMap(std::string fileName, Difficulty diff)
 
 void RythmnMapManager::Delete()
 {
-	delete m_Notes[0];
-	delete m_Notes[1];
+	for (int i = 0; i < 2; i++)
+	{
+		delete m_Notes[i];
+		m_Notes[i] = nullptr;
+	}
 }
 
 void RythmnMapManager::SetDifficulty(Difficulty diff)

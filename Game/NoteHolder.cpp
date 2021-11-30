@@ -1,7 +1,6 @@
 #include "Precompiled.h"
 #include "NoteHolder.h"
 
-
 void NoteHolder::AddNote(double num)
 {
 	m_NotesInTrack.push_back(num);

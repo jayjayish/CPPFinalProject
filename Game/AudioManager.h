@@ -7,9 +7,12 @@ private:
 	sf::SoundBuffer m_SoundBuffer;
 public:
 	void Initialize();
-	static AudioManager& Instance() { static AudioManager audioManager; return audioManager; }
 	void PlayMusic();
 	void StopMusic();
 	void PlayHitSound();
+	AudioManager() = default;
+	~AudioManager() = default;
+	AudioManager(const AudioManager&) = delete;
+	AudioManager& operator=(const AudioManager&) = delete;
 };
 

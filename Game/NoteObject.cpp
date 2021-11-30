@@ -20,5 +20,3 @@ NoteObject::NoteObject()
 	:m_Track(NoteTrack::Upper),
 	m_Duration(0)
 {}
-
-//Add Move and copy
