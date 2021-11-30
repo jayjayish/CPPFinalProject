@@ -24,7 +24,7 @@ void NoteHolder::RemoveNextNote()
 	}
 }
 
-int NoteHolder::GetSize()
+size_t NoteHolder::GetSize()
 {
 	return m_NotesInTrack.size();
 }

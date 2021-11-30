@@ -50,7 +50,7 @@ void RythmnMapManager::LoadMap(std::string fileName, Difficulty diff)
 					m_Notes[(int)diff] = new NoteObject[m_Size[(int)diff]];
 				}
 				int start = 0;
-				int end = line.find(',');
+				int end = static_cast<int>(line.find(','));
 				int track = std::stoi(line.substr(start, end - start));
 				start = end + 1;
 				double duration = std::stod(line.substr(start, end - start));

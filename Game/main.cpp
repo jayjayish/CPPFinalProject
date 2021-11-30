@@ -7,8 +7,9 @@
 #include "ScoreManager.h"
 
 void DrawMainMenu(sf::RenderWindow& window, sf::Font& font);
-void UpdateWindow(sf::RenderWindow& window , sf::Sprite&, sf::Font& font);
+void UpdateWindow(sf::RenderWindow& window , sf::Font& font, sf::Sprite& sprite, sf::Sprite& exitButton, AudioManager& audio);
 void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font);
+void DrawExitButton(sf::RenderWindow& window, sf::Sprite& exitButton, AudioManager& audio);
 void OnStartGame(Difficulty);
 void StartGameDelay(AudioManager& audio);
 void UpdateGameLogic(AudioManager& audio);
@@ -34,7 +35,16 @@ int main()
 		throw "Image file not found";
 	}
 	sf::Sprite m_SpriteImage(m_Image);
-	m_SpriteImage.setPosition(k_WindowWidth / 2.0 - m_Image.getSize().x / 2.0, 70.0f);
+	m_SpriteImage.setPosition(k_WindowWidth / 2.0f - m_Image.getSize().x / 2.0f, 70.0f);
+
+	sf::Texture m_ExitImage;
+	if (!m_ExitImage.loadFromFile("Resources/exitIcon.png"))
+	{
+		throw "Image file not found";
+	}
+
+	sf::Sprite m_ExitSprite(m_ExitImage);
+	m_ExitSprite.setPosition(k_WindowWidth - 64.0f - 20.0f, 20.0f);
 
 	AudioManager audioManager;
 	audioManager.Initialize();
@@ -70,7 +80,7 @@ int main()
 
 		window.clear();
 		UpdateGameLogic(audioManager);
-		UpdateWindow(window, m_SpriteImage, m_Font);
+		UpdateWindow(window, m_Font, m_SpriteImage, m_ExitSprite, audioManager);
 
 		window.display();
 	}
@@ -79,7 +89,7 @@ int main()
 	return 0;
 }
 
-void UpdateWindow(sf::RenderWindow& window, sf::Sprite& sprite, sf::Font& font)
+void UpdateWindow(sf::RenderWindow& window, sf::Font& font, sf::Sprite& sprite, sf::Sprite& exitButton, AudioManager& audio)
 {
 	if (InMenu)
 	{
@@ -92,6 +102,7 @@ void UpdateWindow(sf::RenderWindow& window, sf::Sprite& sprite, sf::Font& font)
 		noteManager.Draw(window);
 		ScoreManager score;
 		score.DrawScore(window, font);
+		DrawExitButton(window, exitButton, audio);
 	}
 	else if (ScoreScreen)
 	{
@@ -141,7 +152,7 @@ void DrawMainMenu(sf::RenderWindow& window, sf::Font& font)
 
 	sf::Text normalText("Start Normal", font, 50);
 	normalText.setFillColor(sf::Color::Black);
-	normalText.setPosition(sf::Vector2f(position.x + 41.0, position.y + 18.0));
+	normalText.setPosition(sf::Vector2f(position.x + 41.0f, position.y + 18.0f));
 
 	window.draw(easyButton);
 	window.draw(normalText);
@@ -165,7 +176,7 @@ void DrawMainMenu(sf::RenderWindow& window, sf::Font& font)
 
 	sf::Text hardText("Start Hard", font, 50);
 	hardText.setFillColor(sf::Color::Black);
-	hardText.setPosition(sf::Vector2f(position.x + 63.0, position.y + 18.0));
+	hardText.setPosition(sf::Vector2f(position.x + 63.0f, position.y + 18.0f));
 
 	window.draw(hardButton);
 	window.draw(hardText);
@@ -187,7 +198,7 @@ void DrawMainMenu(sf::RenderWindow& window, sf::Font& font)
 
 	sf::Text exitText("Exit Game", font, 50);
 	exitText.setFillColor(sf::Color::Black);
-	exitText.setPosition(sf::Vector2f(position.x + 63.0, position.y + 18.0));
+	exitText.setPosition(sf::Vector2f(position.x + 63.0f, position.y + 18.0f));
 
 	window.draw(exitButton);
 	window.draw(exitText);
@@ -205,7 +216,7 @@ void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font)
 	float buttonWidth = 500.0f;
 	float buttonHeight = 100.0f;
 
-	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight - buttonHeight - 100);
+	sf::Vector2f position(k_WindowWidth / 2.0f - buttonWidth / 2.0f, k_WindowHeight - buttonHeight - 100.0f);
 
 	sf::RectangleShape shape(sf::Vector2f(buttonWidth, buttonHeight));
 	shape.setOutlineColor(sf::Color::White);
@@ -215,7 +226,7 @@ void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font)
 
 	sf::Text text("Back to Main Menu", font, 50);
 	text.setFillColor(sf::Color::Black);
-	text.setPosition(sf::Vector2f( position.x + 38.0, position.y + 18.0));
+	text.setPosition(sf::Vector2f( position.x + 38.0f, position.y + 18.0f));
 
 	window.draw(shape);
 	window.draw(text);
@@ -226,6 +237,22 @@ void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font)
 		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
 		pressed.MouseLeftPressed())
 	{
+		ResetGameLogic();
+	}
+}
+
+void DrawExitButton(sf::RenderWindow& window, sf::Sprite& exitButton, AudioManager& audio)
+{
+	sf::Vector2f position(k_WindowWidth - 64.0f - 20.0f, 20.0f);
+	window.draw(exitButton);
+
+	KeyPressOnFrame pressed;
+	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+	if (mousePos.x > position.x && mousePos.x < position.x + 64.0f &&
+		mousePos.y > position.y && mousePos.y < position.y + 64.0f &&
+		pressed.MouseLeftPressed())
+	{
+		audio.StopMusic();
 		ResetGameLogic();
 	}
 }
@@ -245,7 +272,6 @@ void OnStartGame(Difficulty diff)
 void StartGameDelay(AudioManager& audio)
 {
 	Time time;
-	RythmnMapManager manager;
 	if (time.CalculateCurrentBeat() >= k_BeatDelay - k_Offset)
 	{
 		MusicStarted = true;

@@ -10,7 +10,7 @@ public:
 	void AddNote(double);
 	double LookAtNextNote();
 	void RemoveNextNote();
-	int GetSize();
+	size_t GetSize();
 	void Clear();
 	std::vector<double> GetAllNotes();
 

@@ -79,7 +79,7 @@ void ScoreManager::DrawScoreScreen(sf::RenderWindow& window, sf::Font font)
 
 	sf::Vector2f position(k_ScoreScreenLeftOffset, k_ScoreScreenTopOffset);
 	std::string perfectStr = std::to_string(m_Perfect);
-	sf::Text perfect("Perfect" + MakePadding(i - 7 - perfectStr.size()) + perfectStr + "x", font, 42);
+	sf::Text perfect("Perfect" + MakePadding(i - 7 - static_cast<int>(perfectStr.size())) + perfectStr + "x", font, 42);
 	perfect.setFillColor(sf::Color::White);
 	perfect.setPosition(position);
 	window.draw(perfect);
@@ -87,7 +87,7 @@ void ScoreManager::DrawScoreScreen(sf::RenderWindow& window, sf::Font font)
 	position.y += k_ScoreScreenLineSpacing;
 
 	std::string goodStr = std::to_string(m_Good);
-	sf::Text good("Good" + MakePadding(i - 4 - goodStr.size()) + goodStr + "x", font, 42);
+	sf::Text good("Good" + MakePadding(i - 4 - static_cast<int>(goodStr.size())) + goodStr + "x", font, 42);
 	good.setFillColor(sf::Color::White);
 	good.setPosition(position);
 	window.draw(good);
@@ -95,7 +95,7 @@ void ScoreManager::DrawScoreScreen(sf::RenderWindow& window, sf::Font font)
 	position.y += k_ScoreScreenLineSpacing;
 
 	std::string missStr = std::to_string(m_Miss);
-	sf::Text miss("Miss" + MakePadding(i - 3 - missStr.size()) + std::to_string(m_Miss) + "x", font, 42);
+	sf::Text miss("Miss" + MakePadding(i - 3 - static_cast<int>(missStr.size())) + std::to_string(m_Miss) + "x", font, 42);
 	miss.setFillColor(sf::Color::White);
 	miss.setPosition(position);
 	window.draw(miss);
@@ -106,7 +106,7 @@ void ScoreManager::DrawScoreScreen(sf::RenderWindow& window, sf::Font font)
 	std::stringstream stream;
 	stream << std::fixed << std::setprecision(2) << m_Accuracy * 100.0;
 	std::string accStr = stream.str();
-	sf::Text acc("Accuracy" + MakePadding(j - 8 - accStr.size()) + accStr + "%", font, 42);
+	sf::Text acc("Accuracy" + MakePadding(j - 8 - static_cast<int>(accStr.size())) + accStr + "%", font, 42);
 	acc.setFillColor(sf::Color::White);
 	acc.setPosition(position);
 	window.draw(acc);
@@ -114,7 +114,7 @@ void ScoreManager::DrawScoreScreen(sf::RenderWindow& window, sf::Font font)
 	position.y += k_ScoreScreenLineSpacing;
 
 	std::string comboStr = std::to_string(m_MaxCombo);
-	sf::Text combo("Max Combo" + MakePadding(j - 9 - comboStr.size()) + comboStr + "x", font, 42);
+	sf::Text combo("Max Combo" + MakePadding(j - 9 - static_cast<int>(comboStr.size())) + comboStr + "x", font, 42);
 	combo.setFillColor(sf::Color::White);
 	combo.setPosition(position);
 	window.draw(combo);

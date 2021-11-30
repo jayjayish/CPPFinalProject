@@ -139,8 +139,8 @@ void NoteManager::DrawNotes(sf::RenderWindow& window)
 				rect.setOutlineColor(sf::Color::Cyan);
 				rect.setOutlineThickness(1.0f);
 				rect.setPosition(sf::Vector2f(
-					horizontalPosition,
-					k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + (-k_KeyVerticalOffset + i * 2 * k_KeyVerticalOffset)
+					static_cast<float>(horizontalPosition),
+					k_WindowHeight / 2.0f - k_KeyButtonHeight / 2.0f + (-k_KeyVerticalOffset + static_cast<float>(i) * 2.0f * k_KeyVerticalOffset)
 				));
 
 				window.draw(rect);
@@ -156,7 +156,7 @@ void NoteManager::DrawKeys(sf::RenderWindow& window)
 		sf::RectangleShape key(sf::Vector2f(k_KeyButtonWidth, k_KeyButtonHeight));
 		key.setOutlineColor(i ? sf::Color::Cyan : sf::Color::Yellow);
 		key.setOutlineThickness(k_ButtonThickness);
-		key.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + (-k_KeyVerticalOffset + 2 * i * k_KeyVerticalOffset)));
+		key.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0f - k_KeyButtonHeight / 2.0f + (-k_KeyVerticalOffset + 2.0f * static_cast<float>(i) * k_KeyVerticalOffset)));
 		if (sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::J : sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::K : sf::Keyboard::Key::D))
 		{
 			key.setFillColor(i ? sf::Color::Cyan : sf::Color::Yellow);
@@ -179,11 +179,11 @@ void NoteManager::DrawHighlight(sf::RenderWindow& window)
 		KeyHighlight highlight = GetKeyHighlight((NoteTrack)i);
 		if (currentBeat - highlight.m_Beat < k_HighlightDuration && highlight.m_HitType != HitType::Perfect)
 		{
-			sf::RectangleShape key(sf::Vector2f(k_KeyButtonWidth + k_HighlightThickness * 2, k_KeyButtonHeight + k_HighlightThickness * 2));
+			sf::RectangleShape key(sf::Vector2f(k_KeyButtonWidth + k_HighlightThickness * 2.0f, k_KeyButtonHeight + k_HighlightThickness * 2.0f));
 			key.setOutlineThickness(k_HighlightThickness);
 			key.setPosition(sf::Vector2f(
 				k_KeyHorizontalPosition - k_HighlightThickness,
-				k_WindowHeight / 2.0 - k_KeyButtonHeight / 2.0 + (-k_KeyVerticalOffset + 2 * i * k_KeyVerticalOffset) - k_HighlightThickness
+				k_WindowHeight / 2.0f - k_KeyButtonHeight / 2.0f + (-k_KeyVerticalOffset + 2.0f * static_cast<float>(i) * k_KeyVerticalOffset) - k_HighlightThickness
 			));
 			key.setFillColor(sf::Color::Black);
 			if (highlight.m_HitType == HitType::Good)
@@ -223,6 +223,8 @@ KeyHighlight& NoteManager::GetKeyHighlight(NoteTrack track)
 	{
 		return m_LowerTrackHighlight;
 	}
+	
+	throw "This shouldn't happen";
 }
 
 double inline NoteManager::Lerp(double a, double b, double t)
