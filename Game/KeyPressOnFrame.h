@@ -11,7 +11,11 @@ private:
 	static bool J_KeyPressedPrev;
 	static bool K_KeyPressedPrev;
 	static bool LowerPressed;
+
+	static bool MousePressedPrev;
+	static bool MousePressed;
 public:
+	bool MouseLeftPressed();
 	bool KeyPressed(NoteTrack);
 	void Update();
 };

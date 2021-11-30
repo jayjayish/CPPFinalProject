@@ -19,8 +19,7 @@ bool GameStarted = false;
 bool MusicStarted = false;
 bool MapOver = false;
 bool ScoreScreen = false;
-bool LastUpdateUpperKeyPressed = false;
-bool LastUpdateLowerKeyPressed = false;
+bool ExitGame = false;
 
 int main()
 {
@@ -35,7 +34,7 @@ int main()
 		throw "Image file not found";
 	}
 	sf::Sprite m_SpriteImage(m_Image);
-	m_SpriteImage.setPosition(k_WindowWidth / 2.0 - m_Image.getSize().x / 2.0, 100.0f);
+	m_SpriteImage.setPosition(k_WindowWidth / 2.0 - m_Image.getSize().x / 2.0, 70.0f);
 
 	AudioManager audioManager;
 	audioManager.Instance().Initialize();
@@ -54,11 +53,16 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				// TODO Cleanup memory;
 				manager.Delete();
 				window.close();
 				return 0;
 			}
+		}
+		if (ExitGame)
+		{
+			manager.Delete();
+			window.close();
+			return 0;
 		}
 
 		window.clear();
@@ -101,10 +105,11 @@ void UpdateGameLogic()
 		StartGameDelay();
 	}
 
+	KeyPressOnFrame keyPress;
+	keyPress.Update();
+
 	if (GameStarted)
 	{
-		KeyPressOnFrame keyPress;
-		keyPress.Update();
 		NoteManager noteManager;
 		MapOver = noteManager.UpdateNoteTracks();
 		if (MapOver)
@@ -124,7 +129,7 @@ void DrawMainMenu(sf::RenderWindow& window, sf::Font& font)
 	const float buttonWidth = 360.0f;
 	const float buttonHeight = 100.0f;
 	const float buttonOffset = 150.0f;
-	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0 + 150.0);
+	sf::Vector2f position(k_WindowWidth / 2.0 - buttonWidth / 2.0, k_WindowHeight / 2.0 - buttonHeight / 2.0 + 70);
 
 	sf::RectangleShape easyButton(sf::Vector2f(buttonWidth, buttonHeight));
 	easyButton.setOutlineColor(sf::Color::White);
@@ -139,10 +144,11 @@ void DrawMainMenu(sf::RenderWindow& window, sf::Font& font)
 	window.draw(easyButton);
 	window.draw(normalText);
 
+	KeyPressOnFrame pressed;
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
 		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
-		sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		pressed.MouseLeftPressed())
 	{
 		OnStartGame(Difficulty::Normal);
 	}
@@ -164,9 +170,31 @@ void DrawMainMenu(sf::RenderWindow& window, sf::Font& font)
 
 	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
 		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
-		sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		pressed.MouseLeftPressed())
 	{
 		OnStartGame(Difficulty::Hard);
+	}
+	
+	position.y += buttonOffset;
+
+	sf::RectangleShape exitButton(sf::Vector2f(buttonWidth, buttonHeight));
+	exitButton.setOutlineColor(sf::Color::White);
+	exitButton.setOutlineThickness(1.0f);
+	exitButton.setPosition(position);
+	exitButton.setFillColor(sf::Color::White);
+
+	sf::Text exitText("Exit Game", font, 50);
+	exitText.setFillColor(sf::Color::Black);
+	exitText.setPosition(sf::Vector2f(position.x + 63.0, position.y + 18.0));
+
+	window.draw(exitButton);
+	window.draw(exitText);
+
+	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
+		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
+		pressed.MouseLeftPressed())
+	{
+		ExitGame = true;
 	}
 }
 
@@ -190,10 +218,11 @@ void DrawScoreScreen(sf::RenderWindow& window, sf::Font& font)
 	window.draw(shape);
 	window.draw(text);
 
+	KeyPressOnFrame pressed;
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 	if (mousePos.x > position.x && mousePos.x < position.x + buttonWidth &&
 		mousePos.y > position.y && mousePos.y < position.y + buttonHeight &&
-		sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		pressed.MouseLeftPressed())
 	{
 		ResetGameLogic();
 	}

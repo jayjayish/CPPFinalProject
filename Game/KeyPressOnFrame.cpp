@@ -7,6 +7,8 @@ bool KeyPressOnFrame::J_KeyPressedPrev = false;
 bool KeyPressOnFrame::K_KeyPressedPrev = false;
 bool KeyPressOnFrame::LowerPressed = false;
 bool KeyPressOnFrame::UpperPressed = false;
+bool KeyPressOnFrame::MousePressedPrev = false;
+bool KeyPressOnFrame::MousePressed = false;
 
 bool KeyPressOnFrame::KeyPressed(NoteTrack track)
 {
@@ -22,6 +24,10 @@ bool KeyPressOnFrame::KeyPressed(NoteTrack track)
     throw "This shouldn't happen";
 }
 
+bool KeyPressOnFrame::MouseLeftPressed()
+{
+    return MousePressed;
+}
 
 void KeyPressOnFrame::Update()
 {
@@ -66,5 +72,18 @@ void KeyPressOnFrame::Update()
     {
         K_KeyPressedPrev = false;
     }
+
+    MousePressed = false;
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !MousePressedPrev)
+    {
+        MousePressedPrev = true;
+        MousePressed = true;
+    }
+    else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        MousePressedPrev = false;
+    }
 }
+
+
 
