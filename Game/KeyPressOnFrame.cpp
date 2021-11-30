@@ -10,6 +10,19 @@ bool KeyPressOnFrame::UpperPressed = false;
 bool KeyPressOnFrame::MousePressedPrev = false;
 bool KeyPressOnFrame::MousePressed = false;
 
+#define CheckKeyPressed(t, p, k)\
+{\
+    if ((k) && (!p))\
+    {\
+        t = true;\
+        p = true;\
+    }\
+    else if (!k)\
+    {\
+        p = false;\
+    }\
+}
+
 bool KeyPressOnFrame::KeyPressed(NoteTrack track)
 {
     if (track == NoteTrack::Upper)
@@ -32,57 +45,15 @@ bool KeyPressOnFrame::MouseLeftPressed()
 void KeyPressOnFrame::Update()
 {
     UpperPressed = false;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) && !F_KeyPressedPrev)
-    {
-        F_KeyPressedPrev = true;
-        UpperPressed = true;
-    }
-    else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))
-    {
-        F_KeyPressedPrev = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && !D_KeyPressedPrev)
-    {
-        D_KeyPressedPrev = true;
-        UpperPressed = true;
-    }
-    else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-    {
-        D_KeyPressedPrev = false;
-    }
+    CheckKeyPressed(UpperPressed, F_KeyPressedPrev, sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))
+    CheckKeyPressed(UpperPressed, D_KeyPressedPrev, sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 
     LowerPressed = false;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) && !J_KeyPressedPrev)
-    {
-        J_KeyPressedPrev = true;
-        LowerPressed = true;
-    }
-    else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
-    {
-        J_KeyPressedPrev = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K) && !K_KeyPressedPrev)
-    {
-        K_KeyPressedPrev = true;
-        LowerPressed = true;
-    }
-    else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
-    {
-        K_KeyPressedPrev = false;
-    }
+    CheckKeyPressed(LowerPressed, J_KeyPressedPrev, sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
+    CheckKeyPressed(LowerPressed, K_KeyPressedPrev, sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
 
     MousePressed = false;
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !MousePressedPrev)
-    {
-        MousePressedPrev = true;
-        MousePressed = true;
-    }
-    else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        MousePressedPrev = false;
-    }
+    CheckKeyPressed(MousePressed, MousePressedPrev, sf::Mouse::isButtonPressed(sf::Mouse::Left))
 }
 
 

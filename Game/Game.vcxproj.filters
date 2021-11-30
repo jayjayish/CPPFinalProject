@@ -70,9 +70,6 @@
     <ClInclude Include="NoteObject.h">
       <Filter>Gameplay\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalConstants.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="HitType.h">
       <Filter>Gameplay\Structs</Filter>
     </ClInclude>
@@ -93,6 +90,9 @@
     </ClInclude>
     <ClInclude Include="KeyPressOnFrame.h">
       <Filter>Gameplay\Static Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalConstants.h">
+      <Filter>Global</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

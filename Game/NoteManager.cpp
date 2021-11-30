@@ -113,7 +113,6 @@ void NoteManager::Draw(sf::RenderWindow& window)
 {
 	DrawHighlight(window);
 	DrawKeys(window);
-
 	DrawNotes(window);
 }
 
@@ -157,7 +156,8 @@ void NoteManager::DrawKeys(sf::RenderWindow& window)
 		key.setOutlineColor(i ? sf::Color::Cyan : sf::Color::Yellow);
 		key.setOutlineThickness(k_ButtonThickness);
 		key.setPosition(sf::Vector2f(k_KeyHorizontalPosition, k_WindowHeight / 2.0f - k_KeyButtonHeight / 2.0f + (-k_KeyVerticalOffset + 2.0f * static_cast<float>(i) * k_KeyVerticalOffset)));
-		if (sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::J : sf::Keyboard::Key::F) || sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::K : sf::Keyboard::Key::D))
+		if (sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::J : sf::Keyboard::Key::F) ||
+			sf::Keyboard::isKeyPressed(i ? sf::Keyboard::Key::K : sf::Keyboard::Key::D))
 		{
 			key.setFillColor(i ? sf::Color::Cyan : sf::Color::Yellow);
 		}

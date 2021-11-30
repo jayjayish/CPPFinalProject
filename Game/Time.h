@@ -9,7 +9,7 @@ public:
 	static double CalculateCurrentBeat();
 	static void SetTimeStart();
 
-	Time();
+	Time() = default;
 	Time(const Time&) = delete;
 	Time& operator=(const Time&) = delete;
 };
